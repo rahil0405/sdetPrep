@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Automation Interview Bank — Top 5%</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:#08090f;--surface:#0f1118;--surface2:#151923;--border:#1a2030;--border2:#222d40;
+  --accent:#00e5a0;--blue:#0099ff;--orange:#ff7a30;--purple:#a855f7;--yellow:#f59e0b;
+  --red:#f43f5e;--mint:#10b981;--sky:#38bdf8;
+  --text:#dde3ee;--text-mid:#8899b0;--text-dim:#445566;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);z-index:100;}
+
+/* ── LAYOUT ── */
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+
+/* ── LEFT PANEL ── */
+.left{background:var(--surface);border-right:1px solid var(--border);padding:0;position:sticky;top:0;height:100vh;overflow-y:auto;}
+
+.left-logo{padding:22px 20px 16px;border-bottom:1px solid var(--border);}
+.left-logo h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--accent);}
+.left-logo p{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.12em;text-transform:uppercase;margin-top:3px;}
+
+.left-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 16px;border-bottom:1px solid var(--border);}
+.lstat{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center;}
+.lstat-val{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--accent);display:block;}
+.lstat-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+
+.cat-nav{padding:12px 14px 6px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;}
+
+.cat-item{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;text-decoration:none;color:var(--text-mid);font-size:12.5px;}
+.cat-item:hover{background:var(--surface2);color:var(--text);border-left-color:var(--accent);}
+.cat-item.active{background:var(--surface2);color:var(--accent);border-left-color:var(--accent);}
+.cat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-right:8px;}
+.cat-count{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);background:var(--border);padding:1px 6px;border-radius:10px;}
+
+.search-wrap{padding:12px 14px;border-bottom:1px solid var(--border);}
+.search-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--text-dim);}
+
+/* ── RIGHT PANEL ── */
+.right{padding:36px 40px 80px;max-width:860px;}
+
+/* ── CATEGORY HEADER ── */
+.cat-header{margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border);animation:fadeDown 0.4s ease both;}
+.cat-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px;}
+.cat-title{font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.1;}
+.cat-desc{font-size:13px;color:var(--text-mid);margin-top:8px;max-width:540px;line-height:1.6;}
+
+/* ── QUESTION ITEMS ── */
+.q-section{margin-bottom:32px;}
+.q-section-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.q-section-label::before{content:'//';color:var(--accent);}
+.q-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.q-item{border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:8px;transition:border-color 0.2s;}
+.q-item:hover{border-color:var(--border2);}
+.q-item.open{border-color:var(--border2);}
+
+.q-trigger{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;cursor:pointer;user-select:none;transition:background 0.15s;}
+.q-trigger:hover{background:var(--surface2);}
+.q-item.open .q-trigger{background:var(--surface2);border-bottom:1px solid var(--border);}
+
+.q-num{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:3px;flex-shrink:0;margin-top:2px;font-weight:500;}
+
+.q-difficulty{font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;flex-shrink:0;margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;}
+.diff-mid{background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2);}
+.diff-hard{background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2);}
+.diff-senior{background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2);}
+
+.q-text{font-size:13.5px;font-weight:500;color:var(--text);flex:1;line-height:1.45;}
+.q-arrow{color:var(--text-dim);font-size:12px;flex-shrink:0;margin-top:2px;transition:transform 0.2s;font-family:'JetBrains Mono',monospace;}
+.q-item.open .q-arrow{transform:rotate(90deg);color:var(--accent);}
+
+.q-answer{padding:0;max-height:0;overflow:hidden;transition:max-height 0.35s ease,padding 0.2s ease;}
+.q-item.open .q-answer{max-height:600px;padding:16px 16px 18px;}
+
+.a-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px;}
+.a-text{font-size:13px;color:var(--text-mid);line-height:1.7;}
+.a-text strong{color:var(--sky);}
+.a-text code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);background:var(--surface2);padding:1px 5px;border-radius:3px;border:1px solid var(--border);}
+
+.a-points{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.a-points li{display:flex;gap:8px;font-size:12.5px;color:var(--text-mid);align-items:flex-start;}
+.a-points li::before{content:'→';color:var(--accent);flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:10px;padding-top:2px;}
+.a-points li strong{color:var(--text);}
+
+.a-tip{background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.15);border-radius:4px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--text-mid);display:flex;gap:8px;align-items:flex-start;}
+.a-tip-icon{flex-shrink:0;font-size:13px;}
+
+.a-code{background:#060810;border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;color:#8b9bb4;overflow-x:auto;}
+.kw{color:#c792ea;}.fn{color:#82aaff;}.st{color:#c3e88d;}.cm{color:#3d4a5c;font-style:italic;}.nu{color:#f78c6c;}.cl{color:#ffcb6b;}.dc{color:#89ddff;}.vr{color:#eeffff;}
+
+/* ── CATEGORY PAGES ── */
+.cat-page{display:none;}
+.cat-page.active{display:block;}
+
+/* ── ALL PAGE ── */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.ov-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px;cursor:pointer;transition:all 0.2s;}
+.ov-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.ov-card-icon{font-size:24px;margin-bottom:8px;}
+.ov-card h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.ov-card p{font-size:11.5px;color:var(--text-dim);}
+.ov-card-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);margin-top:8px;}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr;}
+  .left{position:static;height:auto;}
+  .right{padding:20px 16px 60px;}
+  .overview-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ── LEFT NAV ── -->
+<div class="left">
+  <div class="left-logo">
+    <h1>Interview Bank</h1>
+    <p>Top 5% QA Automation Prep</p>
+  </div>
+
+  <div class="left-stats">
+    <div class="lstat"><span class="lstat-val">52</span><div class="lstat-lbl">Questions</div></div>
+    <div class="lstat"><span class="lstat-val">8</span><div class="lstat-lbl">Categories</div></div>
+  </div>
+
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="// search questions..." oninput="searchQ(this.value)">
+  </div>
+
+  <div class="cat-nav">Categories</div>
+  <a class="cat-item active" onclick="showCat('all',this)" href="#"><span class="cat-dot" style="background:var(--accent)"></span>All Questions<span class="cat-count">52</span></a>
+  <a class="cat-item" onclick="showCat('js',this)" href="#"><span class="cat-dot" style="background:#f59e0b"></span>JavaScript<span class="cat-count">8</span></a>
+  <a class="cat-item" onclick="showCat('playwright',this)" href="#"><span class="cat-dot" style="background:#0099ff"></span>Playwright Core<span class="cat-count">10</span></a>
+  <a class="cat-item" onclick="showCat('pom',this)" href="#"><span class="cat-dot" style="background:#a855f7"></span>POM & Framework<span class="cat-count">6</span></a>
+  <a class="cat-item" onclick="showCat('api',this)" href="#"><span class="cat-dot" style="background:#ff7a30"></span>API Testing<span class="cat-count">8</span></a>
+  <a class="cat-item" onclick="showCat('cicd',this)" href="#"><span class="cat-dot" style="background:#10b981"></span>CI/CD & Docker<span class="cat-count">7</span></a>
+  <a class="cat-item" onclick="showCat('visual',this)" href="#"><span class="cat-dot" style="background:#38bdf8"></span>Visual & Perf<span class="cat-count">6</span></a>
+  <a class="cat-item" onclick="showCat('scenario',this)" href="#"><span class="cat-dot" style="background:#f43f5e"></span>Scenario Based<span class="cat-count">4</span></a>
+  <a class="cat-item" onclick="showCat('hr',this)" href="#"><span class="cat-dot" style="background:#fbbf24"></span>HR & Behavioural<span class="cat-count">3</span></a>
+</div>
+
+<!-- ── RIGHT CONTENT ── -->
+<div class="right">
+
+<!-- ALL -->
+<div id="cat-all" class="cat-page active">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Complete Question Bank · 52 Questions</div>
+    <div class="cat-title" style="color:var(--accent)">Top 5% Interview Prep</div>
+    <div class="cat-desc">Every question a 4–5 YoE QA Automation Engineer is asked in Indian IT companies — Infosys, TCS, Wipro, Flipkart, Swiggy, Razorpay, PhonePe and product startups. Click any question to reveal the answer.</div>
+  </div>
+  <div class="overview-grid">
+    <div class="ov-card" onclick="showCat('js',null)"><div class="ov-card-icon">⚡</div><h3>JavaScript</h3><p>Event Loop · Promises · Closures · Array methods</p><div class="ov-card-count">8 questions</div></div>
+    <div class="ov-card" onclick="showCat('playwright',null)"><div class="ov-card-icon">🎭</div><h3>Playwright Core</h3><p>Auto-wait · Locators · Assertions · Trace viewer</p><div class="ov-card-count">10 questions</div></div>
+    <div class="ov-card" onclick="showCat('pom',null)"><div class="ov-card-icon">🏗️</div><h3>POM & Framework Design</h3><p>Architecture · Fixtures · Data-driven · Maintenance</p><div class="ov-card-count">6 questions</div></div>
+    <div class="ov-card" onclick="showCat('api',null)"><div class="ov-card-icon">🔗</div><h3>API Testing</h3><p>Chaining · Mocking · Auth · Setup/Teardown</p><div class="ov-card-count">8 questions</div></div>
+    <div class="ov-card" onclick="showCat('cicd',null)"><div class="ov-card-icon">⚙️</div><h3>CI/CD & Docker</h3><p>GitHub Actions · Sharding · Artifacts · Debugging</p><div class="ov-card-count">7 questions</div></div>
+    <div class="ov-card" onclick="showCat('visual',null)"><div class="ov-card-icon">👁️</div><h3>Visual & Performance</h3><p>Snapshots · Core Web Vitals · Lighthouse · Budgets</p><div class="ov-card-count">6 questions</div></div>
+    <div class="ov-card" onclick="showCat('scenario',null)"><div class="ov-card-icon">🧩</div><h3>Scenario Based</h3><p>System design · Flaky tests · Framework from scratch</p><div class="ov-card-count">4 questions</div></div>
+    <div class="ov-card" onclick="showCat('hr',null)"><div class="ov-card-icon">💼</div><h3>HR & Behavioural</h3><p>Career pivot · Conflict · Growth · Support-to-SDET</p><div class="ov-card-count">3 questions</div></div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<div id="cat-js" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · JavaScript</div>
+    <div class="cat-title" style="color:var(--yellow)">JavaScript Questions</div>
+    <div class="cat-desc">These are asked to verify you understand JS deeply enough to write and debug Playwright test code — not to turn you into a frontend developer.</div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-label">Core Language</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-01</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">How does the JavaScript Event Loop work? Why does it matter for Playwright test execution?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">The Event Loop continuously checks the call stack and the task queue. When the call stack is empty, it picks up the next task from the queue. <strong>For Playwright:</strong> every browser action (click, fill, goto) returns a Promise. The Event Loop resolves these Promises in order. If you forget <code>await</code>, the next line executes before the browser action completes — your assertion runs against a stale DOM state.</div>
+        <ul class="a-points">
+          <li><strong>Call stack:</strong> synchronous code runs here</li>
+          <li><strong>Microtask queue:</strong> resolved Promises go here — runs before macrotasks</li>
+          <li><strong>Macrotask queue:</strong> setTimeout, setInterval</li>
+          <li>Playwright uses Node.js async I/O — all browser interactions are microtasks</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Senior signal: mention that Playwright's auto-wait mechanism itself depends on Promise chains resolving correctly — which is why consistent use of async/await is non-negotiable in test code.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-02</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is the difference between Promise.all(), Promise.allSettled(), and Promise.race()? When would you use each in a test?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Promise.all():</strong> resolves when ALL promises resolve. Fails fast if any rejects. Use for parallel API setup where ALL resources must exist before the test runs.</li>
+          <li><strong>Promise.allSettled():</strong> resolves after ALL promises settle (pass or fail). Use for teardown — you want all DELETE calls to attempt even if one fails.</li>
+          <li><strong>Promise.race():</strong> resolves with the first promise to settle. Use for timeout patterns — race your test action against a timeout promise.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>In your framework: beforeAll uses Promise.all() to create 3 users in parallel. afterAll uses Promise.allSettled() to delete them, ensuring teardown completes even if one delete fails.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-03</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is a closure? Give a practical example of where a closure could cause a bug in a Playwright test.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">A closure is a function that retains access to its outer scope's variables even after the outer function has returned.</div>
+        <div class="a-code"><span class="cm">// Classic closure bug in a loop:</span>
+<span class="kw">for</span> (<span class="kw">let</span> <span class="vr">i</span> = <span class="nu">0</span>; <span class="vr">i</span> &lt; <span class="nu">3</span>; <span class="vr">i</span>++) {
+  <span class="fn">test</span>(<span class="st">`clicks button ${i}`</span>, <span class="kw">async</span> () => {
+    <span class="cm">// With var instead of let: all 3 tests would use i=3</span>
+    <span class="cm">// With let: each iteration has its own i binding ✓</span>
+    <span class="kw">await</span> <span class="vr">page</span>.<span class="fn">click</span>(<span class="st">`button:nth-child(${i})`</span>);
+  });
+}</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>This is why using <code>var</code> in loops with async callbacks is dangerous. <code>let</code> creates block-scoped closures. Always use <code>const</code> or <code>let</code> in test code — never <code>var</code>.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-04</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">Write a function to parse and filter test results from an array of objects — find all failed tests with execution time > 5 seconds.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="kw">const</span> <span class="vr">results</span> = [
+  { name: <span class="st">'TC001'</span>, status: <span class="st">'passed'</span>, duration: <span class="nu">1200</span> },
+  { name: <span class="st">'TC002'</span>, status: <span class="st">'failed'</span>, duration: <span class="nu">8500</span> },
+  { name: <span class="st">'TC003'</span>, status: <span class="st">'failed'</span>, duration: <span class="nu">3200</span> },
+];
+
+<span class="kw">const</span> <span class="fn">getSlowFailures</span> = (<span class="vr">results</span>) =>
+  <span class="vr">results</span>
+    .<span class="fn">filter</span>(<span class="vr">r</span> => <span class="vr">r</span>.status === <span class="st">'failed'</span> && <span class="vr">r</span>.duration > <span class="nu">5000</span>)
+    .<span class="fn">map</span>(<span class="vr">r</span> => ({
+      ...r,
+      durationSec: (<span class="vr">r</span>.duration / <span class="nu">1000</span>).<span class="fn">toFixed</span>(<span class="nu">1</span>) + <span class="st">'s'</span>
+    }));
+
+<span class="cm">// Returns: [{ name: 'TC002', status: 'failed', duration: 8500, durationSec: '8.5s' }]</span></div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>This pattern comes directly from your Phase 1 work. Say: "This is the same utility pattern I use in my framework's test data processing layer."</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-05</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is the difference between == and ===? Why should QA engineers always use ===?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text"><strong>==</strong> (loose equality) performs type coercion — <code>"5" == 5</code> is true. <strong>===</strong> (strict equality) checks both value and type — <code>"5" === 5</code> is false.</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>In test assertions, you always want strict equality. A status code of "200" (string) is not the same as 200 (number). Using == could mask a real bug where an API returns a string status code instead of numeric. Always use === or Playwright's typed matchers like toBe().</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-06</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">Explain async/await error handling. What happens if you don't use try/catch in an async test function?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Without try/catch, an unhandled Promise rejection in an async function propagates up as an unhandled rejection. In Playwright, this causes the test to fail with an unclear error message and potentially skips teardown code (afterEach/afterAll).</div>
+        <div class="a-code"><span class="cm">// Correct pattern for critical test steps:</span>
+<span class="fn">test</span>(<span class="st">'checkout flow'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">try</span> {
+    <span class="kw">await</span> <span class="vr">page</span>.<span class="fn">goto</span>(<span class="st">'/checkout'</span>);
+    <span class="kw">await</span> <span class="vr">checkoutPage</span>.<span class="fn">completeOrder</span>();
+  } <span class="kw">catch</span> (<span class="vr">error</span>) {
+    <span class="kw">await</span> <span class="vr">page</span>.<span class="fn">screenshot</span>({ path: <span class="st">'failure.png'</span> });
+    <span class="kw">throw</span> <span class="vr">error</span>; <span class="cm">// re-throw so Playwright marks test as failed</span>
+  }
+});</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Playwright actually wraps test functions internally, so unhandled rejections do fail the test. But explicit try/catch lets you capture screenshots and additional diagnostic info before re-throwing.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-07</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is destructuring and how do you use it in test data handling?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="cm">// Without destructuring — verbose:</span>
+<span class="kw">const</span> <span class="vr">username</span> = <span class="vr">users</span>[<span class="nu">0</span>].username;
+<span class="kw">const</span> <span class="vr">password</span> = <span class="vr">users</span>[<span class="nu">0</span>].password;
+
+<span class="cm">// With destructuring — clean:</span>
+<span class="kw">const</span> { <span class="vr">username</span>, <span class="vr">password</span>, <span class="vr">role</span> } = <span class="vr">users</span>[<span class="nu">0</span>];
+
+<span class="cm">// In test data loops:</span>
+<span class="kw">for</span> (<span class="kw">const</span> { <span class="vr">username</span>, <span class="vr">password</span>, <span class="vr">role</span> } <span class="kw">of</span> <span class="vr">users</span>.validUsers) {
+  <span class="fn">test</span>(<span class="st">`${role} user can log in`</span>, <span class="kw">async</span> () => {
+    <span class="kw">await</span> <span class="vr">loginPage</span>.<span class="fn">loginAs</span>(<span class="vr">username</span>, <span class="vr">password</span>);
+  });
+}</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">JS-08</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the difference between null, undefined, and NaN? How would each cause a silent bug in a test assertion?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>undefined:</strong> variable declared but not assigned. If you destructure a missing key from an API response, you get undefined — and <code>expect(undefined).toBe('active')</code> fails with a confusing error.</li>
+          <li><strong>null:</strong> intentional absence of value. An API returning null for a user field when it should return a string is a genuine bug — assert explicitly with <code>expect(field).not.toBeNull()</code>.</li>
+          <li><strong>NaN:</strong> result of invalid numeric operation. <code>NaN === NaN</code> is false — you must use <code>Number.isNaN()</code> or <code>expect(val).toBeNaN()</code>.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Senior signal: always validate API response shape before asserting on specific fields. Use optional chaining (<code>response?.data?.user?.role</code>) defensively.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLAYWRIGHT -->
+<div id="cat-playwright" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · Playwright Core</div>
+    <div class="cat-title" style="color:var(--blue)">Playwright Questions</div>
+    <div class="cat-desc">The deepest technical section. Every question here is asked at mid-to-senior level QA interviews. Know these cold.</div>
+  </div>
+
+  <div class="q-section">
+    <div class="q-section-label">Core Mechanics</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-01</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">Explain Playwright's auto-wait mechanism in depth. What are actionability checks?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Before performing any action, Playwright checks that the element passes all actionability criteria. This eliminates most explicit waits.</div>
+        <ul class="a-points">
+          <li><strong>Visible:</strong> element has non-zero bounding box, no visibility:hidden or display:none</li>
+          <li><strong>Stable:</strong> element not animating — bounding box is stable across two consecutive frames</li>
+          <li><strong>Enabled:</strong> element is not disabled or aria-disabled</li>
+          <li><strong>Receives events:</strong> element is not obscured by another element at its center point</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Actionability is checked continuously until timeout. Default timeout is 30 seconds. You still need explicit waits for conditions Playwright can't detect — like a data attribute changing after an API call, or a specific network response.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-02</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the difference between page.locator(), page.getByRole(), page.getByTestId(), and page.$()? Which should you use and when?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>page.locator(css/xpath):</strong> flexible, supports any selector. Use for complex queries when semantic locators don't work.</li>
+          <li><strong>page.getByRole():</strong> most resilient — matches ARIA role + accessible name. Also validates accessibility. Use as first choice.</li>
+          <li><strong>page.getByTestId():</strong> matches data-testid attribute. Agreed with devs during sprint. Immune to UI redesigns. Use as second choice.</li>
+          <li><strong>page.getByText():</strong> matches visible text content. Use for static labels. Fragile if text changes with localisation.</li>
+          <li><strong>page.$():</strong> old Playwright API — returns ElementHandle, not Locator. Deprecated pattern. Never use in new code.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Priority order: getByRole > getByTestId > getByText > locator(CSS) > locator(XPath). The further right you go, the more fragile.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-03</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the difference between Locator and ElementHandle in Playwright? Why did Playwright deprecate ElementHandle?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text"><strong>ElementHandle</strong> is a reference to a specific DOM element at a point in time. If the page reloads or the element is replaced, the handle becomes stale and throws errors.</div>
+        <div class="a-text" style="margin-top:8px"><strong>Locator</strong> is a lazy query — it re-queries the DOM at the moment of action. If the element is replaced, the Locator finds the new element. This is why Locators are composable, retry-able, and auto-waiting.</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>The stale element problem is one of the most common Selenium failures. Playwright solved it by making Locator the default — the query is re-executed on every action, not cached.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-04</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">How does the Playwright trace viewer work? What information does it capture?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Trace viewer is a time-travel debugger. When you run with <code>--trace on</code>, Playwright records a zip file containing:</div>
+        <ul class="a-points">
+          <li><strong>Filmstrip timeline:</strong> screenshots at every action with timestamps</li>
+          <li><strong>DOM snapshots:</strong> full DOM state before and after each action — clickable in the viewer</li>
+          <li><strong>Network log:</strong> all HTTP requests/responses with status codes and payloads</li>
+          <li><strong>Console log:</strong> all console.log/error messages during the test</li>
+          <li><strong>Action log:</strong> every Playwright call with timing data</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>This is your answer to "how do you debug CI failures?" — download the trace zip artifact, run <code>npx playwright show-report</code> locally. No need to re-run the failing test.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-05</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What are Playwright fixtures? How are they different from beforeEach? When would you use one vs the other?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>beforeEach:</strong> runs setup code before each test in the current describe block. Scoped to a file. Not reusable across test files.</li>
+          <li><strong>Fixtures:</strong> dependency injection system. Define once, use in any test file via destructuring from the test object. Composable — fixtures can use other fixtures. Auto-cleanup after each test.</li>
+        </ul>
+        <div class="a-code"><span class="cm">// Fixture — reusable across ALL test files:</span>
+<span class="kw">const</span> <span class="vr">test</span> = <span class="vr">base</span>.<span class="fn">extend</span>({
+  <span class="kw">async</span> <span class="fn">loginPage</span>({ page }, <span class="fn">use</span>) {
+    <span class="kw">await</span> <span class="fn">use</span>(<span class="kw">new</span> <span class="cl">LoginPage</span>(page));
+  },
+  <span class="kw">async</span> <span class="fn">loggedInPage</span>({ loginPage }, <span class="fn">use</span>) {
+    <span class="kw">await</span> <span class="vr">loginPage</span>.<span class="fn">loginAs</span>(<span class="st">'admin'</span>, <span class="st">'pass'</span>);
+    <span class="kw">await</span> <span class="fn">use</span>(<span class="vr">loginPage</span>); <span class="cm">// teardown after use() returns</span>
+  }
+});</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Rule: use beforeEach for simple, file-scoped setup. Use fixtures for anything that is reused across 2+ test files, or that needs guaranteed teardown.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-06</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">How do you handle a dropdown select element in Playwright? What about custom dropdowns built with divs?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="cm">// Native HTML select element:</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">selectOption</span>(<span class="st">'#country-select'</span>, { label: <span class="st">'India'</span> });
+<span class="cm">// or by value:</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">selectOption</span>(<span class="st">'#status'</span>, <span class="st">'active'</span>);
+
+<span class="cm">// Custom div-based dropdown (common in React/Angular apps):</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">click</span>(<span class="st">'.dropdown-trigger'</span>);          <span class="cm">// open it</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">getByRole</span>(<span class="st">'option'</span>, { name: <span class="st">'India'</span> }).<span class="fn">click</span>(); <span class="cm">// select</span></div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Custom dropdowns are a common interview live-coding question. The key is: open it first, then select. getByRole('option') works for ARIA-compliant dropdowns.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-07</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How do you handle multiple browser tabs/windows in Playwright?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="cm">// Wait for new page to open, then switch to it:</span>
+<span class="kw">const</span> [<span class="vr">newPage</span>] = <span class="kw">await</span> <span class="cl">Promise</span>.<span class="fn">all</span>([
+  <span class="vr">context</span>.<span class="fn">waitForEvent</span>(<span class="st">'page'</span>),  <span class="cm">// listener set BEFORE trigger</span>
+  <span class="vr">page</span>.<span class="fn">click</span>(<span class="st">'a[target="_blank"]'</span>)
+]);
+<span class="kw">await</span> <span class="vr">newPage</span>.<span class="fn">waitForLoadState</span>();
+<span class="kw">await</span> <span class="fn">expect</span>(<span class="vr">newPage</span>).<span class="fn">toHaveURL</span>(<span class="st">/expected-url/</span>);</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>The listener must be set BEFORE the click that triggers the new tab — this is a common mistake. Promise.all() ensures both run simultaneously.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-08</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">How would you test a file upload in Playwright?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="cm">// Standard file input:</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">setInputFiles</span>(<span class="st">'input[type="file"]'</span>, <span class="st">'./test-data/invoice.pdf'</span>);
+
+<span class="cm">// Multiple files:</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">setInputFiles</span>(<span class="st">'input[type="file"]'</span>, [
+  <span class="st">'./test-data/file1.pdf'</span>, <span class="st">'./test-data/file2.pdf'</span>
+]);
+
+<span class="cm">// Drag-and-drop file upload zone (no input element):</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">dispatchEvent</span>(<span class="st">'.drop-zone'</span>, <span class="st">'drop'</span>, {
+  dataTransfer: <span class="kw">await</span> <span class="vr">page</span>.<span class="fn">evaluateHandle</span>(...) <span class="cm">// construct DataTransfer</span>
+});</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-09</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What causes flaky tests? List 5 causes and how you fix each in Playwright.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Race conditions:</strong> action fires before element is ready. Fix: use Playwright's built-in auto-wait, or page.waitForResponse() for API-triggered state changes.</li>
+          <li><strong>Shared test state:</strong> test A creates data that test B depends on. Fix: each test creates and tears down its own data via API.</li>
+          <li><strong>Hardcoded waits:</strong> setTimeout or page.waitForTimeout(). Fix: replace with conditional waits (waitForSelector, waitForFunction).</li>
+          <li><strong>Fragile selectors:</strong> nth-child, auto-generated classnames. Fix: use data-testid attributes agreed with developers.</li>
+          <li><strong>Timing differences (CI vs local):</strong> CI machines are slower/headless. Fix: increase timeouts in CI config, use --retries=1 to identify true flakiness vs genuine failures.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>A flaky test is worse than no test — it destroys confidence in the entire suite. The SDET's job is to eliminate flakiness systematically, not mask it with retries.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(0,153,255,0.1);color:var(--blue);border:1px solid rgba(0,153,255,0.2)">PW-10</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">How does Playwright compare to Selenium? Why would you choose Playwright for a new project in 2024?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Auto-wait vs explicit waits:</strong> Playwright's actionability checks eliminate 90% of flaky wait code that plagues Selenium suites.</li>
+          <li><strong>Modern async:</strong> Playwright is built for async/await from the ground up. Selenium's architecture predates Promises.</li>
+          <li><strong>Built-in trace viewer:</strong> no equivalent in Selenium. Single biggest debugging advantage.</li>
+          <li><strong>Network interception:</strong> route.fulfill() is native. Selenium requires external proxy setup (BrowserMob).</li>
+          <li><strong>Single package:</strong> Playwright installs browsers automatically. Selenium requires separate WebDriver management (ChromeDriver versions).</li>
+          <li><strong>Parallel isolation:</strong> each Playwright test gets its own browser context by default. Selenium shares sessions unless explicitly managed.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>If the interviewer asks "but Selenium is still widely used" — agree, and say: "For large organisations with existing Selenium investment, migration cost is real. For new projects, Playwright is the clear choice for developer experience and test reliability."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POM & FRAMEWORK -->
+<div id="cat-pom" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · POM & Framework Design</div>
+    <div class="cat-title" style="color:var(--purple)">Framework Architecture</div>
+    <div class="cat-desc">These questions separate candidates who use tools from candidates who design systems. This is where 4–5 YoE interviews are won or lost.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">Architecture</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-01</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">Walk me through your entire test framework architecture end to end. (The master question)</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// your 90-second answer — memorise this</div>
+        <div class="a-text">"My framework has five layers. <strong>Layer 1</strong> is a JavaScript utility library for test data processing — filter, map, reduce over user fixtures, feeding every test in the suite. <strong>Layer 2</strong> is a Page Object Model in TypeScript — one class per page, locators are private, all interactions go through public methods so tests never touch selectors directly. <strong>Layer 3</strong> is API chaining — test data created via REST API in beforeAll, deleted in afterAll, so UI tests start with pre-built state and never depend on UI setup. <strong>Layer 4</strong> is a GitHub Actions pipeline running on Microsoft's official Playwright Docker image, sharded across 4 parallel workers, with HTML reports as artifacts and Slack failure alerts. <strong>Layer 5</strong> is visual regression via Playwright snapshots with baselines versioned in Git, and Lighthouse performance budget assertions on every push."</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Practise this out loud 5 times. Time it — 85-95 seconds is the target. Slower feels rehearsed. Faster feels rushed. This single answer can decide the interview.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-02</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How do you handle test data management in your framework? What is data-driven testing?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Test data lives in JSON files in the test-data/ folder, completely separate from test logic. <strong>Data-driven testing</strong> means one test function runs multiple times with different input datasets — each row of data produces a separate test case.</div>
+        <div class="a-code"><span class="cm">// Data-driven pattern from your framework:</span>
+<span class="kw">for</span> (<span class="kw">const</span> <span class="vr">user</span> <span class="kw">of</span> <span class="vr">users</span>.invalidUsers) {
+  <span class="fn">test</span>(<span class="st">`rejected: ${user.username}`</span>, <span class="kw">async</span> ({ page }) => {
+    <span class="kw">await</span> <span class="vr">loginPage</span>.<span class="fn">loginAs</span>(<span class="vr">user</span>.username, <span class="vr">user</span>.password);
+    <span class="kw">await</span> <span class="fn">expect</span>(<span class="vr">page</span>).<span class="fn">not</span>.<span class="fn">toHaveURL</span>(<span class="st">/inventory/</span>);
+  });
+}</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Adding a new test case is now a one-line JSON change — no code change needed. This is the scalability benefit of separating data from logic.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-03</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">How would you design a framework for a project that has both web and mobile testing requirements?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Shared layer:</strong> business logic, test data, API utilities are device-agnostic — live in a shared/ folder</li>
+          <li><strong>Separate POM layers:</strong> web/pages/ and mobile/screens/ — different interaction patterns but same data</li>
+          <li><strong>Playwright for web,</strong> Appium or Detox for mobile — separate toolchains, shared test data and fixtures</li>
+          <li><strong>Unified reporting:</strong> both suites output to the same Allure or Extent report via CI</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>If mobile is out of scope for your current role, be honest: "My current framework covers web. For mobile, I understand the architecture would extend the data and API layers while replacing the browser interaction layer with Appium."</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-04</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the test pyramid? How does it influence how you structure your Playwright suite?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">The test pyramid: many unit tests at the base, fewer integration tests in the middle, few E2E tests at the top. E2E tests are slow and expensive — they should cover critical user journeys only.</div>
+        <ul class="a-points">
+          <li><strong>In your Playwright suite:</strong> keep E2E tests to happy paths and critical failure scenarios (not every edge case)</li>
+          <li><strong>Edge cases:</strong> validated at unit test level with Jest/Vitest — fast, no browser</li>
+          <li><strong>API tests:</strong> sit in the integration layer — faster than full E2E, test business logic directly</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Your Phase 3 API tests are the integration layer. Your Phase 2 UI tests are the E2E layer. You've built the pyramid without naming it that way — now name it.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-05</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How do you handle test environment configuration — different baseURLs for dev, staging, production?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="cm">// playwright.config.ts — environment-aware config:</span>
+<span class="kw">const</span> <span class="vr">ENV</span> = <span class="vr">process</span>.env.<span class="vr">TEST_ENV</span> || <span class="st">'staging'</span>;
+
+<span class="kw">const</span> <span class="vr">envConfig</span> = {
+  staging:    { baseURL: <span class="st">'https://staging.myapp.com'</span> },
+  production: { baseURL: <span class="st">'https://myapp.com'</span> },
+  local:      { baseURL: <span class="st">'http://localhost:3000'</span> },
+};
+
+<span class="kw">export default</span> <span class="fn">defineConfig</span>({
+  use: { baseURL: <span class="vr">envConfig</span>[<span class="vr">ENV</span>].baseURL }
+});
+
+<span class="cm">// Run against production: TEST_ENV=production npx playwright test</span></div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Environment variables are also set in GitHub Actions secrets — <code>TEST_ENV: staging</code> in the workflow YAML. Never hardcode URLs.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">POM-06</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">What is shift-left testing? How does your framework implement it?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Shift-left means moving testing earlier in the development lifecycle — catching bugs when they're cheapest to fix, not after deployment.</div>
+        <ul class="a-points">
+          <li><strong>data-testid attributes:</strong> I collaborate with devs during sprint to add these before I write tests — testing considerations are baked into the build</li>
+          <li><strong>API tests run first:</strong> contract testing of APIs before UI tests run — if the API is broken, you know immediately</li>
+          <li><strong>PR triggers:</strong> CI runs on every pull request — bugs caught before code merges to main</li>
+          <li><strong>Performance budgets:</strong> Lighthouse fails the pipeline if CWV degrades — performance regression caught before reaching users</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API -->
+<div id="cat-api" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · API Testing</div>
+    <div class="cat-title" style="color:var(--orange)">API Testing Questions</div>
+    <div class="cat-desc">Both API testing as a primary concern, and API chaining as a test setup pattern. Know the difference and when each applies.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">API Fundamentals</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-01</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What HTTP status codes should you assert in API tests? What does each range mean?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>2xx Success:</strong> 200 (OK), 201 (Created — assert after POST), 204 (No Content — assert after DELETE)</li>
+          <li><strong>3xx Redirect:</strong> 301 (Moved Permanently), 302 (Temporary redirect) — usually follow automatically</li>
+          <li><strong>4xx Client Error:</strong> 400 (Bad Request), 401 (Unauthorized — missing auth), 403 (Forbidden — insufficient permissions), 404 (Not Found), 422 (Validation error)</li>
+          <li><strong>5xx Server Error:</strong> 500 (Internal Server Error), 503 (Service Unavailable) — mock these with route.fulfill()</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Always assert both the status code AND the response body shape. A 200 with an empty data array is a bug, not a success.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-02</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the difference between authentication and authorisation in API testing?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text"><strong>Authentication</strong> = who are you? (login, token generation). <strong>Authorisation</strong> = what are you allowed to do? (role-based access).</div>
+        <ul class="a-points">
+          <li>Test authentication: POST /login returns a token for valid credentials, 401 for invalid</li>
+          <li>Test authorisation: Admin token can DELETE /users, Viewer token gets 403 on DELETE /users</li>
+          <li>In your framework: you extract the token from the login API response and pass it in headers for subsequent requests</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Common bug: API correctly checks authentication but skips authorisation checks — a Viewer can delete records they shouldn't. This is a security test, not just a functional test.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-03</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How do you validate the schema of an API response? Why isn't just checking the status code enough?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-code"><span class="kw">const</span> <span class="vr">response</span> = <span class="kw">await</span> <span class="vr">request</span>.<span class="fn">get</span>(<span class="st">'/api/users/1'</span>);
+<span class="fn">expect</span>(<span class="vr">response</span>.<span class="fn">status</span>()).<span class="fn">toBe</span>(<span class="nu">200</span>);
+
+<span class="kw">const</span> <span class="vr">body</span> = <span class="kw">await</span> <span class="vr">response</span>.<span class="fn">json</span>();
+
+<span class="cm">// Check shape, not just status:</span>
+<span class="fn">expect</span>(<span class="vr">body</span>).<span class="fn">toHaveProperty</span>(<span class="st">'id'</span>);
+<span class="fn">expect</span>(<span class="vr">body</span>).<span class="fn">toHaveProperty</span>(<span class="st">'email'</span>);
+<span class="fn">expect</span>(<span class="kw">typeof</span> <span class="vr">body</span>.id).<span class="fn">toBe</span>(<span class="st">'number'</span>);
+<span class="fn">expect</span>(<span class="vr">body</span>.email).<span class="fn">toMatch</span>(<span class="st">/^[^\s@]+@[^\s@]+\.[^\s@]+$/</span>);</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Status 200 with a null body, missing fields, or wrong data types is a contract violation — the UI will break when it tries to render the data. Schema validation catches these.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-04</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">Why do you use Playwright's built-in request context instead of Axios or node-fetch for API testing?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Zero additional dependencies:</strong> request is built into @playwright/test — no extra packages</li>
+          <li><strong>Shares browser context:</strong> cookies and storage state from the browser context flow into API calls automatically</li>
+          <li><strong>Integrated reporting:</strong> API calls appear in trace viewer and HTML report</li>
+          <li><strong>Same async pattern:</strong> consistent async/await syntax with the rest of your Playwright code</li>
+          <li><strong>Built-in retry:</strong> can leverage Playwright's retry mechanism</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-05</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">What is contract testing? How does it differ from API testing?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text"><strong>API testing</strong> validates that an API works correctly. <strong>Contract testing</strong> validates that the API's interface (the "contract") hasn't changed in a way that breaks its consumers.</div>
+        <ul class="a-points">
+          <li>Tools: Pact.io is the industry standard for consumer-driven contract testing</li>
+          <li>Use case: Microservices — Service A consumes Service B's API. If Service B changes a field name, contract tests catch it before deployment.</li>
+          <li>Different from API testing: contract testing is about the interface agreement, not the business logic</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>If asked about contract testing, acknowledge it as a concept and be honest about your experience level. Mentioning Pact.io shows awareness without overclaiming.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-06</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How would you test pagination in an API? What edge cases matter?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Happy path:</strong> first page returns correct count, has next page link/cursor</li>
+          <li><strong>Last page:</strong> no next page link, correct item count (may be less than page size)</li>
+          <li><strong>Empty results:</strong> page=1 returns empty array, not 404</li>
+          <li><strong>Out of range:</strong> page=999 returns empty array, not 500</li>
+          <li><strong>Page size validation:</strong> page_size=0 or negative should return 400 or use default</li>
+          <li><strong>Consistency:</strong> total count in metadata matches actual records returned across pages</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-07</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is the difference between route.fulfill() and route.abort() in Playwright?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>route.fulfill():</strong> intercepts the request and returns a custom response. Use to mock API responses (fake data, error codes, slow responses).</li>
+          <li><strong>route.abort():</strong> intercepts and kills the request — simulates network failure, DNS failure, or timeout. Use to test how the UI handles complete connectivity loss.</li>
+          <li><strong>route.continue():</strong> lets the request proceed normally but allows you to modify headers/body.</li>
+        </ul>
+        <div class="a-code"><span class="cm">// Simulate offline mode:</span>
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">route</span>(<span class="st">'**/*'</span>, <span class="vr">route</span> => <span class="vr">route</span>.<span class="fn">abort</span>(<span class="st">'failed'</span>));
+<span class="kw">await</span> <span class="vr">page</span>.<span class="fn">goto</span>(<span class="st">'/'</span>);
+<span class="cm">// Assert offline banner appears</span></div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(255,122,48,0.1);color:var(--orange);border:1px solid rgba(255,122,48,0.2)">API-08</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">How do you handle flaky API calls in test setup? What if the external API is slow or unreliable?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Retry with backoff:</strong> wrap API calls in a retry utility — attempt 3 times with exponential backoff</li>
+          <li><strong>Timeout configuration:</strong> set explicit timeout on request context, not the default</li>
+          <li><strong>Mock instead:</strong> if the external API is truly unreliable, mock it with route.fulfill() in CI — only hit real API in smoke test suite</li>
+          <li><strong>Health check:</strong> add a beforeAll that verifies the API is reachable before running the full suite</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Senior signal: recognise the difference between test infrastructure reliability (your problem to solve) and application reliability (developer's problem to solve). Don't mask app bugs by retrying too aggressively.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CI/CD -->
+<div id="cat-cicd" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · CI/CD & Docker</div>
+    <div class="cat-title" style="color:var(--mint)">CI/CD Questions</div>
+    <div class="cat-desc">Most QA candidates can't answer these. You built a working pipeline — this is your competitive advantage.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">Pipeline & Docker</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-01</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">Explain the difference between fail-fast: true and fail-fast: false in GitHub Actions matrix strategy. When would you use each?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>fail-fast: true (default):</strong> if any matrix job fails, GitHub Actions cancels all other running jobs immediately. Saves compute time — good when you just want to know if anything failed.</li>
+          <li><strong>fail-fast: false:</strong> all matrix jobs run to completion regardless of failures. Use for test suites — you want the full picture of what failed, not just the first shard that broke.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>In your framework: fail-fast is false for the test job. This means if shard 2 fails, shards 1, 3, 4 still complete — you get a comprehensive failure report, not a partial one.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-02</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the difference between npm install and npm ci? Why does CI use npm ci?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>npm install:</strong> installs packages, updates package-lock.json if versions differ. Can produce different dependency trees on different machines.</li>
+          <li><strong>npm ci (clean install):</strong> deletes node_modules first, installs exactly what's in package-lock.json, fails if lock file doesn't match package.json. Deterministic — same tree every time. 2× faster than npm install.</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>npm ci is CI-safe because it guarantees reproducibility. If a developer accidentally updates a package locally but doesn't commit the lock file, npm ci will fail the pipeline, catching the inconsistency.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-03</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">What is a GitHub Actions cache? How does it speed up your Playwright pipeline?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">actions/cache saves and restores directories between workflow runs. Without caching, npm ci downloads all packages from scratch on every run (slow). With caching, node_modules is restored from cache if package-lock.json hasn't changed.</div>
+        <div class="a-code"><span class="kw">- uses</span>: <span class="cl">actions/setup-node@v4</span>
+  <span class="kw">with</span>:
+    <span class="kw">node-version</span>: <span class="cl">'20'</span>
+    <span class="kw">cache</span>: <span class="cl">'npm'</span>  <span class="cm"># This enables caching automatically</span></div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Cache hit: npm ci skips downloading and runs in ~5 seconds. Cache miss (lock file changed): full install, maybe 60 seconds. Cache key is a hash of package-lock.json.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-04</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is the if: always() condition on the artifact upload step? Why is it important?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">By default, a step only runs if all previous steps succeeded. <code>if: always()</code> overrides this — the artifact upload runs regardless of whether the test step passed or failed.</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Without if: always(), when tests fail, the upload step is skipped — and you have no report to investigate. This is the most common rookie CI mistake. The report is most valuable precisely when tests fail.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-05</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is workflow_dispatch in GitHub Actions? When would you use it?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text"><code>workflow_dispatch</code> adds a "Run workflow" button in the GitHub Actions UI — allowing manual trigger of the pipeline without a code push.</div>
+        <ul class="a-points">
+          <li>Use case: run smoke tests against production after a deployment</li>
+          <li>Use case: trigger a full regression suite on demand before a release</li>
+          <li>Can accept input parameters — useful for targeting a specific test tag or environment</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-06</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">How would you configure your pipeline to only run tests affected by a code change, rather than the full suite on every push?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>paths filter:</strong> GitHub Actions on.push.paths — only trigger if specific files changed</li>
+          <li><strong>tags/grep:</strong> Playwright's --grep flag runs only tests matching a pattern — tag critical tests with @smoke, run only those on PR, full suite on merge to main</li>
+          <li><strong>Test impact analysis:</strong> advanced — tools like Launchable.io use ML to predict which tests are likely to fail given the changed files</li>
+        </ul>
+        <div class="a-code"><span class="kw">on</span>:
+  <span class="kw">push</span>:
+    <span class="kw">paths</span>:
+      - <span class="cl">'src/checkout/**'</span>  <span class="cm"># Only run if checkout code changed</span>
+      - <span class="cl">'tests/e2e/**'</span></div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(16,185,129,0.1);color:var(--mint);border:1px solid rgba(16,185,129,0.2)">CI-07</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">What would you add to this pipeline to make it truly enterprise-grade?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Allure reporting:</strong> rich, historical test reports with trend analysis and flakiness metrics</li>
+          <li><strong>Test retry on failure:</strong> --retries=2 in CI config to distinguish genuine failures from infrastructure flakiness</li>
+          <li><strong>Separate smoke suite:</strong> 10 critical tests tagged @smoke — run on every PR in under 2 minutes</li>
+          <li><strong>Scheduled regression:</strong> full suite nightly on a cron schedule</li>
+          <li><strong>Environment matrix:</strong> run against staging AND production with different test sets</li>
+          <li><strong>Security scanning:</strong> add SAST step (npm audit) alongside test execution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VISUAL & PERF -->
+<div id="cat-visual" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · Visual & Performance</div>
+    <div class="cat-title" style="color:var(--sky)">Visual Regression & Performance</div>
+    <div class="cat-desc">The differentiator layer. Most candidates don't have this. You do — own it.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">Visual & Performance</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-01</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">Why do you commit snapshot baselines to Git instead of storing them externally?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Version parity:</strong> baseline is version-controlled alongside the code that produced it — you always know which code version corresponds to which visual baseline</li>
+          <li><strong>PR diff visibility:</strong> when baselines are updated, the PNG diff is visible in the PR — design reviews can happen in code review</li>
+          <li><strong>CI consistency:</strong> CI always uses the same baseline as the code being tested — no external service dependency</li>
+          <li><strong>Audit trail:</strong> Git history shows every visual change with who approved it and why</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-02</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">How do you handle false positives in visual regression tests — cases where tests fail but the UI looks correct?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>animations: 'disabled'</strong> in config — animations cause pixel differences between runs</li>
+          <li><strong>threshold config:</strong> set maxDiffPixelRatio or maxDiffPixels to allow minor anti-aliasing differences</li>
+          <li><strong>mask dynamic areas:</strong> mask elements with dynamic content (timestamps, ads, user avatars) using the mask option</li>
+          <li><strong>Font rendering:</strong> always run visual tests on the same OS — font rendering differs between macOS and Linux</li>
+        </ul>
+        <div class="a-code"><span class="kw">await</span> <span class="fn">expect</span>(<span class="vr">page</span>).<span class="fn">toHaveScreenshot</span>(<span class="cl">'home.png'</span>, {
+  <span class="vr">mask</span>: [<span class="vr">page</span>.<span class="fn">locator</span>(<span class="cl">'.dynamic-timestamp'</span>)],
+  <span class="vr">maxDiffPixelRatio</span>: <span class="nu">0.02</span>  <span class="cm">// 2% pixel difference allowed</span>
+});</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-03</span>
+        <span class="q-difficulty diff-hard">Hard</span>
+        <span class="q-text">What is Largest Contentful Paint (LCP) and how would you diagnose an LCP regression?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">LCP measures when the largest visible element in the viewport finishes rendering — typically a hero image or headline. Target: under 2.5 seconds. Over 4 seconds is poor.</div>
+        <ul class="a-points">
+          <li><strong>Common causes of LCP regression:</strong> large unoptimised hero image added, lazy loading applied to LCP element, render-blocking CSS/JS added, server response time increased</li>
+          <li><strong>Diagnosis:</strong> Lighthouse report shows exactly which element is the LCP element and what caused the delay (resource load time, render delay, time to first byte)</li>
+          <li><strong>In your framework:</strong> if Lighthouse CI fails the performance budget, the pipeline fails — team investigates before merging</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-04</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is Cumulative Layout Shift (CLS)? What causes it and how do you assert against it?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">CLS measures how much visible content shifts unexpectedly during page load. A score of 0 is perfect, above 0.1 is "needs improvement", above 0.25 is poor.</div>
+        <ul class="a-points">
+          <li><strong>Causes:</strong> images without explicit width/height, ads injecting content, web fonts causing FOUT (flash of unstyled text), dynamically injected elements</li>
+          <li><strong>Assert in your framework:</strong> Lighthouse thresholds config — <code>{ "cumulative-layout-shift": { "maxScore": 0.1 } }</code></li>
+          <li><strong>Why QA cares:</strong> high CLS means users accidentally click wrong elements because content moved — directly impacts conversion rates</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-05</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">How would you build a performance regression alerting system — flag if performance degrades between releases?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li>Run Lighthouse on every CI build, save scores to a JSON artifact</li>
+          <li>Compare current run's scores against previous run using a custom script in the pipeline</li>
+          <li>If any score drops by more than 5 points, fail the pipeline and send a Slack alert with the delta</li>
+          <li>For enterprise: tools like Calibre or SpeedCurve track performance trends over time with dashboards</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>This is a "design a system" answer — you don't need to have built this, but you need to describe the architecture clearly. It shows systems thinking.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(56,189,248,0.1);color:var(--sky);border:1px solid rgba(56,189,248,0.2)">VP-06</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">What is the accessibility score in Lighthouse and why should a QA engineer care about it?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">Lighthouse's accessibility score checks against WCAG guidelines — proper ARIA labels, colour contrast, keyboard navigation, alt text on images.</div>
+        <ul class="a-points">
+          <li>Legal requirement in many markets — WCAG 2.1 AA compliance is legally mandated for government and financial services sites in India and globally</li>
+          <li>Business impact: poor accessibility excludes users with disabilities — estimated 15% of population</li>
+          <li>Bonus: asserting getByRole() in your Playwright tests simultaneously validates accessibility — your locator strategy and a11y testing are the same work</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Mention accessibility as a quality dimension, not just a compliance checkbox. It differentiates you from candidates who only think about functional correctness.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIO -->
+<div id="cat-scenario" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · Scenario Based</div>
+    <div class="cat-title" style="color:var(--red)">Scenario Questions</div>
+    <div class="cat-desc">Open-ended design questions. The interviewer is watching your thought process, not just your final answer.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">System Design for QA</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2)">SC-01</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">You join a company that has no automation. The team does everything manually. How do you build automation from scratch in 90 days?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer framework</div>
+        <ul class="a-points">
+          <li><strong>Days 1–14 (Discover):</strong> map the current manual test suite, identify the 20% of tests that catch 80% of bugs, instrument DevTools to understand the app's real network and DOM patterns</li>
+          <li><strong>Days 15–30 (Foundation):</strong> set up Playwright + TypeScript + POM skeleton, implement CI pipeline with GitHub Actions, establish data strategy (JSON fixtures + API setup)</li>
+          <li><strong>Days 31–60 (Core suite):</strong> automate the critical-path tests identified in phase 1 — login, checkout, key user journeys. Target: 20 tests covering 80% of regression risk</li>
+          <li><strong>Days 61–90 (Expand + report):</strong> add visual regression for key UI components, configure Slack alerting, present metrics to stakeholders — tests run time, bugs caught, manual testing hours saved</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>The differentiator: start with discovery, not coding. Interviewers want to see that you understand ROI, not just technical execution.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2)">SC-02</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">Your CI pipeline is taking 45 minutes to run. The team is complaining. How do you reduce it to under 10 minutes?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// systematic approach</div>
+        <ul class="a-points">
+          <li><strong>Profile first:</strong> identify the slowest tests using the HTML report's duration column — fix the top 10% of slow tests first</li>
+          <li><strong>Sharding:</strong> split suite into 4–8 parallel workers using Playwright's --shard flag</li>
+          <li><strong>API setup vs UI setup:</strong> replace any remaining UI-based setup with API calls — 10x faster per test</li>
+          <li><strong>Smoke + full separation:</strong> run only @smoke tagged tests on PR (5 min), full regression nightly (45 min is fine overnight)</li>
+          <li><strong>Remove redundancy:</strong> audit for duplicate tests or tests that cover the same scenario at multiple layers</li>
+          <li><strong>npm ci caching:</strong> ensure node_modules is cached between runs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2)">SC-03</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">A test was passing for 3 months. Today it fails on CI but passes locally. Walk through your complete debugging process.</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// debugging process</div>
+        <ul class="a-points">
+          <li><strong>Step 1:</strong> Download the trace artifact from the failed CI run — open in trace viewer. Look at the exact DOM state and network activity at failure point.</li>
+          <li><strong>Step 2:</strong> Check if any dependencies changed — package.json, Docker image version, environment variables</li>
+          <li><strong>Step 3:</strong> Check if the application changed — what was deployed around the time failures started? Talk to the dev team.</li>
+          <li><strong>Step 4:</strong> Run with --headed locally in the same environment conditions (headless, same viewport, same network)</li>
+          <li><strong>Step 5:</strong> Check for timing — add --retries=1 to see if it's intermittent</li>
+          <li><strong>Step 6:</strong> Check for test isolation — did another test that runs before this one change shared state?</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Most interviewers want to hear: trace viewer first, talk to devs second, never add sleep() as a fix.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(244,63,94,0.1);color:var(--red);border:1px solid rgba(244,63,94,0.2)">SC-04</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">How do you measure the ROI of test automation? What metrics do you present to management?</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <ul class="a-points">
+          <li><strong>Time saved:</strong> hours of manual regression per sprint × cost per hour vs automation maintenance cost</li>
+          <li><strong>Bug detection speed:</strong> average time from code commit to bug detection (before: next QA cycle = days; after: CI run = minutes)</li>
+          <li><strong>Regression coverage:</strong> % of regression test suite automated — trend over time</li>
+          <li><strong>Flakiness rate:</strong> % of test runs with at least one flaky test — lower is better, track monthly</li>
+          <li><strong>Production defect rate:</strong> bugs that escaped to production — should decrease as automation coverage increases</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Management cares about business outcomes, not test counts. Frame everything in time, money, and risk. "Our CI pipeline catches 85% of regressions within 6 minutes of a commit" is more compelling than "we have 200 tests."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HR -->
+<div id="cat-hr" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Category · HR & Behavioural</div>
+    <div class="cat-title" style="color:var(--yellow)">HR Questions</div>
+    <div class="cat-desc">The questions that decide if you get the offer after the technical round. Your support background is your story — own it.</div>
+  </div>
+  <div class="q-section">
+    <div class="q-section-label">The Career Pivot Story</div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">HR-01</span>
+        <span class="q-difficulty diff-senior">Senior</span>
+        <span class="q-text">"You have a Technical Support background. Why should we hire you as a QA Automation Engineer with 4–5 years experience?"</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// your answer — adapt and personalise</div>
+        <div class="a-text">"My support background is an advantage, not a gap. I spent years diagnosing production failures by inspecting DOM states, analysing network payloads, reading stack traces, and tracing bugs back to their root cause — this is exactly what QA engineers do, just without the automation layer. I wasn't waiting for bugs to be reported; I was finding them. What I've built in the last few months is the automation infrastructure on top of that analytical foundation — a Playwright framework with POM, API chaining, a GitHub Actions CI pipeline with Docker sharding, and visual regression testing. My support experience means I understand what breaks in production and why, which makes me a better test designer than someone who only learned to write scripts."</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>The key pivot: "I was already doing QA work — I was just doing it reactively. Now I do it proactively and automatically." Never apologise for the support background. It's domain knowledge most automation engineers lack.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">HR-02</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">"Describe a time you significantly improved a process. What was the impact?"</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// structure your answer with STAR</div>
+        <ul class="a-points">
+          <li><strong>Situation:</strong> Describe the manual or slow process that existed</li>
+          <li><strong>Task:</strong> What you were responsible for improving</li>
+          <li><strong>Action:</strong> Specifically what you built — use your framework as the example. "I built a Playwright automation framework that replaced X hours of manual regression testing per sprint."</li>
+          <li><strong>Result:</strong> Quantify it — "Regression suite went from 4 hours manual to 6 minutes automated. CI catches bugs before they reach staging."</li>
+        </ul>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>If you don't have a professional example yet, use your personal project. "In building my automation framework, I replaced the manual process of..." is a valid answer if delivered with confidence.</div>
+      </div>
+    </div>
+
+    <div class="q-item">
+      <div class="q-trigger" onclick="toggle(this.parentElement)">
+        <span class="q-num" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.2)">HR-03</span>
+        <span class="q-difficulty diff-mid">Mid</span>
+        <span class="q-text">"Where do you see yourself in 2 years in QA Automation?"</span>
+        <span class="q-arrow">▶</span>
+      </div>
+      <div class="q-answer">
+        <div class="a-label">// answer</div>
+        <div class="a-text">"In 2 years, I want to own the test strategy for a product end to end — not just maintaining a suite, but shaping what gets tested, at what layer, and with what priority. I'm interested in moving toward SDET lead or QA architect responsibilities — designing the framework that other engineers contribute to, integrating testing deeper into the development process, and driving quality as an engineering discipline rather than a gating activity. I'm also keen to explore mobile automation and performance testing beyond Lighthouse — expanding from functional correctness into the full quality spectrum."</div>
+        <div class="a-tip"><span class="a-tip-icon">🎯</span>Show growth trajectory, not just job security. Companies hire people who will grow — they're investing in you. Show you know where you're going.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS -->
+<div id="cat-search" class="cat-page">
+  <div class="cat-header">
+    <div class="cat-eyebrow">Search Results</div>
+    <div class="cat-title" style="color:var(--accent)">Matching Questions</div>
+  </div>
+  <div id="search-results"></div>
+</div>
+
+</div><!-- /right -->
+</div><!-- /layout -->
+
+<script>
+function showCat(id, navEl) {
+  document.querySelectorAll('.cat-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('cat-' + id).classList.add('active');
+  document.querySelectorAll('.cat-item').forEach(n => n.classList.remove('active'));
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    document.querySelectorAll('.cat-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+  window.scrollTo(0, 0);
+}
+
+function toggle(item) {
+  // close others in same section
+  const allItems = document.querySelectorAll('.q-item.open');
+  allItems.forEach(i => { if (i !== item) i.classList.remove('open'); });
+  item.classList.toggle('open');
+}
+
+function searchQ(val) {
+  if (!val.trim()) { showCat('all', null); return; }
+  val = val.toLowerCase();
+  const allQuestions = document.querySelectorAll('.q-item');
+  const results = [];
+  allQuestions.forEach(q => {
+    const text = q.querySelector('.q-text').textContent.toLowerCase();
+    const answer = q.querySelector('.q-answer') ? q.querySelector('.q-answer').textContent.toLowerCase() : '';
+    if (text.includes(val) || answer.includes(val)) {
+      results.push(q.cloneNode(true));
+    }
+  });
+
+  document.querySelectorAll('.cat-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('cat-search').classList.add('active');
+  document.querySelector('.cat-header .cat-title').textContent = `${results.length} results for "${val}"`;
+
+  const container = document.getElementById('search-results');
+  container.innerHTML = '';
+  if (results.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-dim);font-family:JetBrains Mono,monospace;font-size:12px;padding:20px 0">// no questions match that search</div>';
+  } else {
+    results.forEach(r => {
+      // re-attach toggle
+      const trigger = r.querySelector('.q-trigger');
+      if (trigger) trigger.setAttribute('onclick', 'toggle(this.parentElement)');
+      container.appendChild(r);
+    });
+  }
+}
+</script>
+</body>
+</html>

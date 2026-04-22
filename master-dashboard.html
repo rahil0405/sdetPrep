@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero-to-Job: QA Automation Mentor — Complete Journey</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:#0a0c10;--surface:#111318;--surface2:#181c23;--border:#1e2430;
+  --accent:#00e5a0;--accent2:#0099ff;--accent3:#ff6b35;--accent4:#a855f7;
+  --accent5:#fbbf24;--text:#e8eaf0;--text-dim:#6b7280;--text-mid:#9ca3af;
+  --red:#ff4d6d;--yellow:#fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+/* ── AMBIENT ── */
+body::before{content:'';position:fixed;top:-20%;left:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(0,229,160,0.04),transparent 70%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;bottom:-20%;right:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(0,153,255,0.04),transparent 70%);pointer-events:none;z-index:0;}
+
+/* ── SIDEBAR NAV ── */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:#0d1018;border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;padding:0;}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+.sidebar-logo-text{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--accent);letter-spacing:-0.01em;}
+.sidebar-logo-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+
+.nav-section{padding:12px 14px 4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.15em;text-transform:uppercase;}
+
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;color:var(--text-mid);font-size:13px;}
+.nav-item:hover{background:var(--surface);color:var(--text);border-left-color:var(--accent);}
+.nav-item.active{background:var(--surface);color:var(--accent);border-left-color:var(--accent);}
+.nav-item.active .nav-dot{background:var(--accent);box-shadow:0 0 6px rgba(0,229,160,0.5);}
+
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:all 0.15s;}
+.nav-dot.done{background:var(--accent);}
+.nav-dot.active-dot{background:var(--accent);box-shadow:0 0 6px rgba(0,229,160,0.5);}
+
+.nav-label{font-size:12px;}
+.nav-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:1px;}
+
+.nav-divider{height:1px;background:var(--border);margin:8px 14px;}
+
+.sidebar-progress{padding:14px 16px;border-top:1px solid var(--border);margin-top:auto;}
+.sp-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.sp-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.sp-fill{height:100%;background:var(--accent);border-radius:2px;width:100%;box-shadow:0 0 6px rgba(0,229,160,0.4);}
+.sp-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);margin-top:5px;}
+
+/* ── MAIN CONTENT ── */
+.main{margin-left:220px;min-height:100vh;position:relative;z-index:1;}
+
+/* ── PAGE SECTIONS ── */
+.page-section{display:none;padding:40px 36px 80px;max-width:960px;}
+.page-section.active{display:block;}
+
+/* ── HOME PAGE ── */
+.home-hero{margin-bottom:48px;animation:fadeDown 0.5s ease both;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'▶';font-size:8px;animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.home-hero h1{font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:800;line-height:1.1;letter-spacing:-0.02em;color:var(--text);}
+.home-hero h1 span{color:var(--accent);}
+.home-hero p{font-size:15px;color:var(--text-mid);margin-top:14px;max-width:560px;line-height:1.7;}
+
+/* Journey stats */
+.journey-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:40px;}
+.jstat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;text-align:center;animation:fadeUp 0.4s ease both;}
+.jstat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);display:block;}
+.jstat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;}
+
+/* Step cards grid */
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:22px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+.step-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.3);}
+.step-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;}
+.sc-1::before{background:linear-gradient(90deg,var(--accent),transparent);}
+.sc-2::before{background:linear-gradient(90deg,var(--accent2),transparent);}
+.sc-3::before{background:linear-gradient(90deg,var(--accent3),transparent);}
+.sc-4::before{background:linear-gradient(90deg,var(--yellow),transparent);}
+.sc-5::before{background:linear-gradient(90deg,var(--accent4),transparent);}
+.sc-6::before{background:linear-gradient(90deg,var(--red),transparent);}
+
+.step-card-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:0.15em;margin-bottom:8px;}
+.step-card h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.step-card p{font-size:12px;color:var(--text-dim);line-height:1.5;}
+.step-card-badge{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;border-radius:3px;}
+.badge-done{background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2);}
+.badge-iq{background:rgba(168,85,247,0.1);color:var(--accent4);border:1px solid rgba(168,85,247,0.2);}
+.step-card-arrow{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--border);transition:all 0.2s;}
+.step-card:hover .step-card-arrow{color:var(--text-mid);right:14px;}
+
+/* ── SECTION HEADERS ── */
+.section-header{margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid var(--border);animation:fadeDown 0.4s ease both;}
+.sh-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:10px;}
+.sh-title{font-family:'Syne',sans-serif;font-size:clamp(22px,3vw,34px);font-weight:800;line-height:1.1;color:var(--text);}
+.sh-title span{color:var(--accent);}
+.sh-meta{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.sh-chip{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:3px;background:var(--surface2);border:1px solid var(--border);color:var(--text-mid);}
+.sh-chip.active-chip{background:rgba(0,229,160,0.1);border-color:rgba(0,229,160,0.2);color:var(--accent);}
+
+/* ── CONTENT CARDS ── */
+.sl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin:32px 0 12px;display:flex;align-items:center;gap:12px;}
+.sl::before{content:'//';color:var(--accent);}
+.sl::after{content:'';flex:1;height:1px;background:var(--border);margin-left:6px;}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;position:relative;overflow:hidden;animation:fadeUp 0.4s ease both;transition:transform 0.2s,border-color 0.2s;}
+.card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.08);}
+.card-stripe{position:absolute;top:0;left:0;right:0;height:2px;}
+.cs-green{background:var(--accent);box-shadow:0 0 8px rgba(0,229,160,0.3);}
+.cs-blue{background:var(--accent2);}
+.cs-orange{background:var(--accent3);}
+.cs-purple{background:var(--accent4);}
+.cs-yellow{background:var(--yellow);}
+.cs-red{background:var(--red);}
+.card-tag{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;}
+.card h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;}
+
+.tr{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--surface2);font-size:12.5px;}
+.tr:last-child{border-bottom:none;}
+.tr-n{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);flex-shrink:0;min-width:20px;padding-top:2px;}
+.tr-t{font-weight:500;color:var(--text);}
+.tr-s{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:1px;}
+
+/* Stop items */
+.stop-item{display:flex;gap:10px;padding:9px 12px;background:rgba(255,77,109,0.05);border:1px solid rgba(255,77,109,0.15);border-radius:4px;margin-bottom:6px;font-size:12.5px;color:var(--text-mid);}
+.sx{color:var(--red);font-family:'JetBrains Mono',monospace;font-weight:700;flex-shrink:0;}
+
+/* Interview Qs */
+.iq{border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:8px;transition:border-color 0.2s;}
+.iq:hover{border-color:rgba(168,85,247,0.4);}
+.iq-h{background:var(--surface2);padding:10px 14px;display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid var(--border);}
+.iq-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent4);flex-shrink:0;padding-top:2px;}
+.iq-q{font-size:13px;font-weight:500;color:var(--text);}
+.iq-b{padding:12px 14px;font-size:12.5px;color:var(--text-mid);line-height:1.65;}
+.iq-b strong{color:var(--accent2);}
+
+/* Code */
+.cw{background:#080c14;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:12px 0;}
+.cb{background:#0d1220;padding:6px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
+.cf{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);}
+.cdots{display:flex;gap:4px;}
+.cdots span{width:8px;height:8px;border-radius:50%;}
+.rr{background:#ff5f57;}.yy{background:#febc2e;}.gg{background:#28c840;}
+pre{padding:16px 18px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;color:#8b9bb4;}
+.kw{color:#c792ea;}.fn{color:#82aaff;}.st{color:#c3e88d;}.cm{color:#3d4a5c;font-style:italic;}.nu{color:#f78c6c;}.cl{color:#ffcb6b;}.dc{color:#89ddff;}.vr{color:#eeffff;}.ky{color:#f0b429;}
+
+/* Task wrap */
+.task-wrap{background:var(--surface);border:1px solid var(--accent);border-radius:8px;overflow:hidden;margin-bottom:14px;box-shadow:0 0 24px rgba(0,229,160,0.04);}
+.task-head{background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,153,255,0.04));padding:18px 22px;border-bottom:1px solid var(--border);}
+.task-head h2{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;}
+.task-sub-txt{font-size:11px;color:var(--text-dim);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+.task-body{padding:22px;}
+
+.tblocks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.tblock{border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center;background:var(--surface2);}
+.tv{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;display:block;margin-bottom:2px;}
+.tblock:nth-child(1) .tv{color:var(--accent);}
+.tblock:nth-child(2) .tv{color:var(--accent2);}
+.tblock:nth-child(3) .tv{color:var(--accent3);}
+.tl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;}
+
+/* Checklist */
+.cg{margin-bottom:18px;}
+.cg-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.cg-lbl::before{content:'//';color:var(--accent);font-size:9px;}
+.checklist{display:flex;flex-direction:column;gap:5px;}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);cursor:pointer;transition:all 0.15s;user-select:none;font-size:12.5px;color:var(--text);}
+.ci:hover{background:#1c2130;border-color:rgba(255,255,255,0.08);}
+.ci.done{opacity:0.35;}
+.ci.done .chk{background:var(--accent);border-color:var(--accent);color:#000;}
+.ci.done .ci-t{text-decoration:line-through;color:var(--text-dim);}
+.chk{width:16px;height:16px;border:1px solid var(--border);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:2px;transition:all 0.15s;font-family:'JetBrains Mono',monospace;}
+
+/* Pivot */
+.pivot{background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:20px;margin-bottom:14px;}
+.pivot-head{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--yellow);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.pivot-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;}
+.pc{border-radius:4px;padding:12px;font-size:12.5px;line-height:1.55;}
+.pc-b{background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.18);color:var(--text-mid);}
+.pc-a{background:rgba(0,229,160,0.05);border:1px solid rgba(0,229,160,0.18);color:var(--text-mid);}
+.pc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.lbl-b{color:var(--red);}
+.lbl-a{color:var(--accent);}
+.p-arr{text-align:center;color:var(--border);font-size:18px;}
+
+/* Mentor note */
+.mn{background:rgba(0,153,255,0.05);border:1px solid rgba(0,153,255,0.15);border-radius:6px;padding:14px 18px;display:flex;gap:12px;margin-top:12px;font-size:12.5px;color:var(--text-mid);line-height:1.65;}
+.mn-ava{font-size:17px;flex-shrink:0;}
+.mn strong{color:var(--accent2);}
+
+code{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);background:var(--surface2);padding:1px 5px;border-radius:3px;border:1px solid var(--border);}
+
+/* Pipeline diagram */
+.pipe-track{display:flex;align-items:center;gap:0;overflow-x:auto;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin:14px 0;}
+.pipe-stage{flex:1;border:1px solid var(--border);border-radius:4px;padding:12px 8px;text-align:center;background:var(--surface2);position:relative;min-width:100px;}
+.pipe-stage::before{content:attr(data-num);position:absolute;top:-8px;left:8px;font-family:'JetBrains Mono',monospace;font-size:8px;background:var(--surface2);padding:0 4px;color:var(--text-dim);}
+.pipe-stage.ps-g{border-color:var(--accent);}
+.pipe-stage.ps-b{border-color:var(--accent2);}
+.pipe-stage.ps-o{border-color:var(--accent3);}
+.pipe-stage.ps-y{border-color:var(--yellow);}
+.pipe-stage.ps-r{border-color:var(--red);}
+.pipe-icon{font-size:18px;display:block;margin-bottom:4px;}
+.pipe-name{font-weight:600;font-size:11px;color:var(--text);display:block;}
+.pipe-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);margin-top:2px;display:block;}
+.pipe-arrow{width:24px;flex-shrink:0;text-align:center;color:var(--border);font-size:14px;}
+
+/* POM diagram */
+.pom-diagram{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px;margin:12px 0;}
+.pom-box{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center;}
+.pom-box.pb-g{border-color:var(--accent);}
+.pom-box.pb-r{border-color:var(--red);}
+.pom-box.pb-y{border-color:var(--yellow);}
+.pom-box-name{font-weight:600;font-size:12px;color:var(--text);margin-bottom:3px;}
+.pom-box-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);}
+.pom-arr{text-align:center;color:var(--border);font-size:16px;padding:0 6px;}
+
+/* Slack preview */
+.slack-preview{background:#1a1f2e;border:1px solid #2e3650;border-radius:6px;overflow:hidden;margin:12px 0;}
+.slack-bar{background:#4a154b;padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#d0a0d4;}
+.slack-body{padding:12px;}
+.slack-msg{border-left:3px solid var(--red);padding:10px 12px;background:rgba(255,77,109,0.06);border-radius:0 4px 4px 0;}
+.slack-header{color:var(--red);font-weight:600;font-size:11px;margin-bottom:5px;font-family:'JetBrains Mono',monospace;}
+.slack-line{color:#8892a4;font-size:10px;margin:2px 0;font-family:'JetBrains Mono',monospace;}
+.slack-line span{color:#d0d8e8;}
+
+/* completion banner */
+.completion-banner{background:linear-gradient(135deg,#1a0a3a,#0a2a1a);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:28px 32px;margin-bottom:32px;position:relative;overflow:hidden;}
+.completion-banner::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(0,229,160,0.06),transparent 65%);pointer-events:none;}
+.cb-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:10px;}
+.cb-title{font-family:'Syne',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;line-height:1.1;color:var(--text);margin-bottom:10px;}
+.cb-sub{font-size:13px;color:var(--text-mid);max-width:500px;}
+.cb-stats{display:flex;gap:28px;margin-top:20px;flex-wrap:wrap;}
+.cb-stat-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--accent);display:block;line-height:1;}
+.cb-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;}
+
+/* Final checklist */
+.final-card{background:linear-gradient(135deg,#100820,#081820);border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:26px;}
+.final-card h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.final-card p{font-size:12px;color:var(--text-dim);margin-bottom:16px;font-family:'JetBrains Mono',monospace;}
+.fci{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid rgba(255,255,255,0.07);border-radius:4px;background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.15s;user-select:none;font-size:12.5px;color:rgba(255,255,255,0.65);margin-bottom:5px;}
+.fci:hover{background:rgba(255,255,255,0.06);}
+.fci.done{opacity:0.35;}
+.fci.done .fchk{background:var(--accent);border-color:var(--accent);color:#000;}
+.fci.done .fci-t{text-decoration:line-through;}
+.fchk{width:16px;height:16px;border:1px solid rgba(255,255,255,0.15);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;margin-top:2px;transition:all 0.15s;font-family:'JetBrains Mono',monospace;}
+
+/* interview bank in step pages */
+.iq-bank{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.iq-bank-head{background:var(--surface2);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.iq-bank-head h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+.iq-bank-body{padding:14px 16px;}
+.iq-mini{padding:8px 0;border-bottom:1px solid var(--surface2);font-size:12.5px;color:var(--text-mid);display:flex;gap:8px;align-items:flex-start;}
+.iq-mini:last-child{border-bottom:none;}
+.iq-mini-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-dim);flex-shrink:0;padding-top:2px;min-width:20px;}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .sidebar{width:100%;height:56px;bottom:auto;flex-direction:row;align-items:center;padding:0 14px;overflow-x:auto;}
+  .sidebar-logo{display:none;}
+  .nav-section{display:none;}
+  .nav-item{padding:8px 10px;border-left:none;border-bottom:2px solid transparent;white-space:nowrap;}
+  .nav-item.active{border-bottom-color:var(--accent);border-left:none;}
+  .nav-divider{display:none;}
+  .sidebar-progress{display:none;}
+  .main{margin-left:0;margin-top:56px;}
+  .page-section{padding:24px 18px 60px;}
+  .grid-2,.grid-3,.steps-grid,.journey-stats{grid-template-columns:1fr;}
+  .pivot-cols,.pom-diagram{grid-template-columns:1fr;}
+  .p-arr,.pom-arr{display:none;}
+  .tblocks{grid-template-columns:1fr;}
+  .pipe-track{flex-direction:column;}
+  .pipe-arrow{transform:rotate(90deg);}
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">QA Mentor</div>
+    <div class="sidebar-logo-sub">Zero → Job Ready</div>
+  </div>
+
+  <div class="nav-section">Journey</div>
+  <a class="nav-item active" onclick="showPage('home',this)" href="#">
+    <span class="nav-dot active-dot"></span>
+    <div><div class="nav-label">Overview</div><div class="nav-sub">Full journey map</div></div>
+  </a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-section">Steps</div>
+
+  <a class="nav-item" onclick="showPage('step1',this)" href="#">
+    <span class="nav-dot done"></span>
+    <div><div class="nav-label">Step 01 · JavaScript</div><div class="nav-sub">ES6 · Async · DOM</div></div>
+  </a>
+  <a class="nav-item" onclick="showPage('step2',this)" href="#">
+    <span class="nav-dot done"></span>
+    <div><div class="nav-label">Step 02 · Playwright</div><div class="nav-sub">Core · POM · Locators</div></div>
+  </a>
+  <a class="nav-item" onclick="showPage('step3',this)" href="#">
+    <span class="nav-dot done"></span>
+    <div><div class="nav-label">Step 03 · API Chain</div><div class="nav-sub">Setup · Teardown · Mock</div></div>
+  </a>
+  <a class="nav-item" onclick="showPage('step4',this)" href="#">
+    <span class="nav-dot done"></span>
+    <div><div class="nav-label">Step 04 · CI/CD</div><div class="nav-sub">GitHub Actions · Docker</div></div>
+  </a>
+  <a class="nav-item" onclick="showPage('step5',this)" href="#">
+    <span class="nav-dot done"></span>
+    <div><div class="nav-label">Step 05 · Visual+Perf</div><div class="nav-sub">Snapshots · Lighthouse</div></div>
+  </a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-section">Interview</div>
+  <a class="nav-item" onclick="showPage('interview',this)" href="#">
+    <span class="nav-dot" style="background:var(--accent4);box-shadow:0 0 6px rgba(168,85,247,0.5)"></span>
+    <div><div class="nav-label">Question Bank</div><div class="nav-sub">Top 5% prep</div></div>
+  </a>
+
+  <div class="sidebar-progress">
+    <div class="sp-label">Framework Complete</div>
+    <div class="sp-track"><div class="sp-fill"></div></div>
+    <div class="sp-count">5 / 5 Steps Done ✓</div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+<!-- ══════════════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════════════ -->
+<div id="page-home" class="page-section active">
+
+  <div class="home-hero">
+    <div class="hero-eyebrow">QA Automation · SDET Path · 4–5 Year Target Role</div>
+    <h1>Your Complete<br><span>Zero-to-Job</span> Journey</h1>
+    <p>From zero JavaScript knowledge to a production-grade Playwright framework with CI/CD pipeline — built in months, ready for senior SDET interviews in the Indian IT market.</p>
+  </div>
+
+  <div class="journey-stats">
+    <div class="jstat" style="animation-delay:0.05s"><span class="jstat-val">5</span><div class="jstat-lbl">Phases Built</div></div>
+    <div class="jstat" style="animation-delay:0.1s"><span class="jstat-val">30+</span><div class="jstat-lbl">Tests Written</div></div>
+    <div class="jstat" style="animation-delay:0.15s"><span class="jstat-val">4</span><div class="jstat-lbl">CI Shards</div></div>
+    <div class="jstat" style="animation-delay:0.2s"><span class="jstat-val">18</span><div class="jstat-lbl">Interview Q's</div></div>
+  </div>
+
+  <div class="sl">All Steps — Click to Navigate</div>
+
+  <div class="steps-grid">
+    <a class="step-card sc-1" onclick="showPage('step1',null)" href="#">
+      <div class="step-card-num">STEP 01 · COMPLETE ✓</div>
+      <h3>JavaScript & DOM</h3>
+      <p>ES6 fundamentals · Async/await · Array methods · DOM selectors · Event Loop</p>
+      <div class="step-card-badge badge-done">✓ Done</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+    <a class="step-card sc-2" onclick="showPage('step2',null)" href="#">
+      <div class="step-card-num">STEP 02 · COMPLETE ✓</div>
+      <h3>Playwright Core + POM</h3>
+      <p>Page Object Model · Dynamic locators · Fixtures · Auto-wait · HTML Reporter</p>
+      <div class="step-card-badge badge-done">✓ Done</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+    <a class="step-card sc-3" onclick="showPage('step3',null)" href="#">
+      <div class="step-card-num">STEP 03 · COMPLETE ✓</div>
+      <h3>API Chaining</h3>
+      <p>Setup/teardown via API · route.fulfill() mocking · Token extraction · Parallel setup</p>
+      <div class="step-card-badge badge-done">✓ Done</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+    <a class="step-card sc-4" onclick="showPage('step4',null)" href="#">
+      <div class="step-card-num">STEP 04 · COMPLETE ✓</div>
+      <h3>CI/CD Pipeline</h3>
+      <p>GitHub Actions · Docker runner · 4-shard parallel · Slack alerts · Artifacts</p>
+      <div class="step-card-badge badge-done">✓ Done</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+    <a class="step-card sc-5" onclick="showPage('step5',null)" href="#">
+      <div class="step-card-num">STEP 05 · COMPLETE ✓</div>
+      <h3>Visual Regression + Performance</h3>
+      <p>Playwright snapshots · Baseline versioning · Lighthouse budgets · Core Web Vitals</p>
+      <div class="step-card-badge badge-done">✓ Done</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+    <a class="step-card sc-6" onclick="showPage('interview',null)" href="#">
+      <div class="step-card-num">INTERVIEW PREP · TOP 5%</div>
+      <h3>Full Question Bank</h3>
+      <p>50+ questions across JS · Playwright · API · CI/CD · Behavioural — with answers</p>
+      <div class="step-card-badge badge-iq">⚡ Interview Ready</div>
+      <div class="step-card-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="sl">The Framework Architecture You Built</div>
+  <div class="pipe-track">
+    <div class="pipe-stage ps-g" data-num="Step 01"><span class="pipe-icon">⚡</span><span class="pipe-name">JS Utilities</span><span class="pipe-sub">Data layer</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-b" data-num="Step 02"><span class="pipe-icon">🎭</span><span class="pipe-name">POM Framework</span><span class="pipe-sub">Page objects</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-o" data-num="Step 03"><span class="pipe-icon">🔗</span><span class="pipe-name">API Chaining</span><span class="pipe-sub">Setup/teardown</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-y" data-num="Step 04"><span class="pipe-icon">⚙️</span><span class="pipe-name">CI Pipeline</span><span class="pipe-sub">Docker · shards</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-r" data-num="Step 05"><span class="pipe-icon">👁️</span><span class="pipe-name">Visual + Perf</span><span class="pipe-sub">Snapshots · LH</span></div>
+  </div>
+
+  <div class="mn" style="margin-top:24px">
+    <div class="mn-ava">👨‍💻</div>
+    <div><strong>Senior SDET Note:</strong> You have built every layer of this framework deliberately. Each step feeds the next — JS data utilities feed the POM, POM is set up by API chaining, the whole suite runs on CI with visual and performance validation. That's not a tutorial project. That's a production-grade framework. Now go articulate it.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STEP 1
+══════════════════════════════════════════════ -->
+<div id="page-step1" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Step 01 of 05 · Complete ✓</div>
+    <div class="sh-title"><span>JavaScript</span> & DOM Manipulation</div>
+    <div class="sh-meta">
+      <span class="sh-chip active-chip">✓ Complete</span>
+      <span class="sh-chip">10–12 Days</span>
+      <span class="sh-chip">Phase 1: userProcessor.js</span>
+    </div>
+  </div>
+
+  <div class="sl">Necessary Topics</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-stripe cs-green"></div><div class="card-tag">ES6 Fundamentals</div><h3>Core Syntax</h3>
+      <div class="tr"><span class="tr-n">01</span><div><div class="tr-t">let / const</div><div class="tr-s">Block scope · avoid var forever</div></div></div>
+      <div class="tr"><span class="tr-n">02</span><div><div class="tr-t">Arrow Functions</div><div class="tr-s">() => {} · lexical this · callbacks</div></div></div>
+      <div class="tr"><span class="tr-n">03</span><div><div class="tr-t">Template Literals</div><div class="tr-s">`Hello ${name}` · multi-line strings</div></div></div>
+      <div class="tr"><span class="tr-n">04</span><div><div class="tr-t">Destructuring & Spread</div><div class="tr-s">const {role} = user · [...arr]</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-blue"></div><div class="card-tag">Async JS — Critical</div><h3>Promises & Await</h3>
+      <div class="tr"><span class="tr-n">05</span><div><div class="tr-t">Promises</div><div class="tr-s">.then() · .catch() · .finally()</div></div></div>
+      <div class="tr"><span class="tr-n">06</span><div><div class="tr-t">async / await</div><div class="tr-s">How Playwright waits for elements</div></div></div>
+      <div class="tr"><span class="tr-n">07</span><div><div class="tr-t">Promise.all()</div><div class="tr-s">Parallel API calls · race conditions</div></div></div>
+      <div class="tr"><span class="tr-n">08</span><div><div class="tr-t">Event Loop (concept)</div><div class="tr-s">Call stack · queue · macrotask</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-orange"></div><div class="card-tag">Array Methods</div><h3>Test Data Handling</h3>
+      <div class="tr"><span class="tr-n">09</span><div><div class="tr-t">map()</div><div class="tr-s">Transform test data objects</div></div></div>
+      <div class="tr"><span class="tr-n">10</span><div><div class="tr-t">filter()</div><div class="tr-s">Isolate test users by role / flag</div></div></div>
+      <div class="tr"><span class="tr-n">11</span><div><div class="tr-t">reduce()</div><div class="tr-s">Aggregate test results · counters</div></div></div>
+      <div class="tr"><span class="tr-n">12</span><div><div class="tr-t">find() / some() / every()</div><div class="tr-s">Assertion helpers in test scripts</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-purple"></div><div class="card-tag">DOM — Locator Strategy</div><h3>Selectors</h3>
+      <div class="tr"><span class="tr-n">13</span><div><div class="tr-t">CSS Selectors</div><div class="tr-s">#id · .class · [attr='val'] · nth-child</div></div></div>
+      <div class="tr"><span class="tr-n">14</span><div><div class="tr-t">XPath Basics</div><div class="tr-s">//div[@data-testid='btn'] · text()</div></div></div>
+      <div class="tr"><span class="tr-n">15</span><div><div class="tr-t">Hidden Elements</div><div class="tr-s">display:none vs aria-hidden vs opacity:0</div></div></div>
+      <div class="tr"><span class="tr-n">16</span><div><div class="tr-t">DevTools Workflow</div><div class="tr-s">$$ / $x in console · copy selector</div></div></div>
+    </div>
+  </div>
+
+  <div class="sl">The Stop Line</div>
+  <div class="card" style="margin-bottom:14px"><div class="card-stripe cs-red"></div><div class="card-tag">Do Not Cross</div><h3>Hard Stops</h3>
+    <div class="stop-item"><span class="sx">✕</span>Do NOT learn React, Angular, or Vue. You test UIs — you don't build them.</div>
+    <div class="stop-item"><span class="sx">✕</span>Do NOT go deeper than basic Node.js. No Express, no REST API servers.</div>
+    <div class="stop-item"><span class="sx">✕</span>Do NOT build UI components. You only query, read, and interact with the DOM.</div>
+    <div class="stop-item"><span class="sx">✕</span>Do NOT deep-dive TypeScript yet. Learn type and interface basics only in Step 2.</div>
+    <div class="stop-item"><span class="sx">✕</span>Do NOT spend time on OOP patterns (classes, inheritance) right now.</div>
+  </div>
+
+  <div class="sl">Interview Questions — Step 1</div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 01</span><span class="iq-q">"How does the JavaScript Event Loop handle asynchronous test steps in Playwright?"</span></div><div class="iq-b"><strong>Answer:</strong> Playwright is built on async I/O. Every browser action returns a Promise. Missing await causes test steps to fire out of order — the assert runs before the click resolves. Mention: call stack, microtask queue, and that Playwright's internal scheduler depends on Promise resolution chains.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 02</span><span class="iq-q">"Write a function to handle a dynamic table where row position changes every refresh."</span></div><div class="iq-b"><strong>Answer:</strong> Never use nth-child or index-based selectors. Use filter() on the table rows array, matching on a stable attribute like data-id or text content. Demonstrate the difference between stable vs fragile locators.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 03</span><span class="iq-q">"Explain why you would use Promise.all() when waiting for multiple API responses in a test script."</span></div><div class="iq-b"><strong>Answer:</strong> Sequential await is N× slower for test setup. Promise.all() fires all requests in parallel and resolves when ALL complete. Tradeoff: if one fails, all fail — use Promise.allSettled() when partial success is acceptable.</div></div>
+
+  <div class="sl">Support Pivot — Resume Bullet</div>
+  <div class="pivot"><div class="pivot-head">💼 Step 1 Bullet</div><div class="pivot-cols"><div class="pc pc-b"><div class="pc-lbl lbl-b">❌ Before</div>"Resolved customer tickets and escalated bugs."</div><div class="p-arr">→</div><div class="pc pc-a"><div class="pc-lbl lbl-a">✅ After</div>"Performed manual regression analysis and root cause diagnosis by inspecting DOM structures, network payloads, and system logs to isolate failure points — a methodology directly aligned with QA validation workflows."</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STEP 2
+══════════════════════════════════════════════ -->
+<div id="page-step2" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Step 02 of 05 · Complete ✓</div>
+    <div class="sh-title">Playwright Core &amp; <span>Page Object Model</span></div>
+    <div class="sh-meta"><span class="sh-chip active-chip">✓ Complete</span><span class="sh-chip">14 Days</span><span class="sh-chip">Target: saucedemo.com</span></div>
+  </div>
+
+  <div class="sl">POM Architecture</div>
+  <div class="pom-diagram">
+    <div class="pom-box pb-g"><div class="pom-box-name">Test Files</div><div class="pom-box-sub">login.spec.ts<br>cart.spec.ts</div></div>
+    <div class="pom-arr">→</div>
+    <div class="pom-box pb-r"><div class="pom-box-name">Page Objects</div><div class="pom-box-sub">LoginPage.ts<br>CartPage.ts</div></div>
+    <div class="pom-arr">→</div>
+    <div class="pom-box pb-y"><div class="pom-box-name">Fixtures + Data</div><div class="pom-box-sub">base.fixture.ts<br>users.json</div></div>
+  </div>
+
+  <div class="sl">Scope — 14 Days</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-stripe cs-blue"></div><div class="card-tag">Week 1 · Days 1–7</div><h3>Playwright Fundamentals</h3>
+      <div class="tr"><span class="tr-n">01</span><div><div class="tr-t">Install + Config</div><div class="tr-s">npm init playwright@latest · playwright.config.ts</div></div></div>
+      <div class="tr"><span class="tr-n">02</span><div><div class="tr-t">Locator Strategies</div><div class="tr-s">getByRole · getByText · getByTestId · CSS · XPath</div></div></div>
+      <div class="tr"><span class="tr-n">03</span><div><div class="tr-t">Auto-Wait Mechanism</div><div class="tr-s">Actionability checks · why no sleep()</div></div></div>
+      <div class="tr"><span class="tr-n">04</span><div><div class="tr-t">Core Actions</div><div class="tr-s">click · fill · select · hover · screenshot</div></div></div>
+      <div class="tr"><span class="tr-n">05</span><div><div class="tr-t">Assertions (expect)</div><div class="tr-s">toBeVisible · toHaveText · toHaveURL</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-purple"></div><div class="card-tag">Week 2 · Days 8–14</div><h3>POM + Advanced</h3>
+      <div class="tr"><span class="tr-n">06</span><div><div class="tr-t">POM Architecture</div><div class="tr-s">class per page · constructor(page) · encapsulation</div></div></div>
+      <div class="tr"><span class="tr-n">07</span><div><div class="tr-t">Dynamic Locators</div><div class="tr-s">Parameterised selectors · stable vs fragile</div></div></div>
+      <div class="tr"><span class="tr-n">08</span><div><div class="tr-t">Fixtures</div><div class="tr-s">test.extend() · reusable page objects</div></div></div>
+      <div class="tr"><span class="tr-n">09</span><div><div class="tr-t">Tracing + Debugging</div><div class="tr-s">--trace on · trace viewer · screenshot on fail</div></div></div>
+      <div class="tr"><span class="tr-n">10</span><div><div class="tr-t">Parallel Execution</div><div class="tr-s">workers config · test.describe.parallel</div></div></div>
+    </div>
+  </div>
+
+  <div class="sl">Interview Questions — Step 2</div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 04</span><span class="iq-q">"Playwright never needs explicit waits — agree or disagree? Explain with an example."</span></div><div class="iq-b"><strong>Answer:</strong> Disagree with nuance. Playwright auto-waits for actionability before every action — eliminating 90% of flaky waits. But you still need explicit waits for: custom polling with page.waitForFunction(), network responses with page.waitForResponse(), elements that animate in after a delay. Key insight: Playwright waits for element state, not arbitrary time.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 05</span><span class="iq-q">"Why would you use Page Object Model in a large suite? What breaks without it?"</span></div><div class="iq-b"><strong>Answer:</strong> Without POM, a single UI change forces updates across potentially 50+ test files. With POM, you update one method in LoginPage.ts and every test inherits the fix. Also: POM makes tests readable business logic. Say: "separation of concerns between test intent and implementation detail."</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 06</span><span class="iq-q">"What is your locator selection strategy? How do you avoid flaky selectors?"</span></div><div class="iq-b"><strong>Answer:</strong> Priority: (1) getByRole() — most resilient, tests accessibility. (2) getByTestId() with data-testid attributes agreed with devs. (3) getByText() for static labels. (4) CSS with stable attributes. Never: nth-child indexes, auto-generated class names, absolute XPaths. SDET insight: "I work with devs to add data-testid attributes during sprint — shift-left quality."</div></div>
+
+  <div class="sl">Support Pivot</div>
+  <div class="pivot"><div class="pivot-head">💼 Step 2 Bullet</div><div class="pivot-cols"><div class="pc pc-b"><div class="pc-lbl lbl-b">❌ Before</div>"Used automation tools to test web applications."</div><div class="p-arr">→</div><div class="pc pc-a"><div class="pc-lbl lbl-a">✅ After</div>"Designed and implemented a Page Object Model framework in Playwright + TypeScript for an e-commerce application — enabling data-driven test execution across multiple user roles, reducing test maintenance overhead by decoupling locator logic from test intent."</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STEP 3
+══════════════════════════════════════════════ -->
+<div id="page-step3" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Step 03 of 05 · Complete ✓</div>
+    <div class="sh-title">API Chaining &amp; <span>Setup/Teardown</span></div>
+    <div class="sh-meta"><span class="sh-chip active-chip">✓ Complete</span><span class="sh-chip">10 Days</span><span class="sh-chip">reqres.in + saucedemo</span></div>
+  </div>
+
+  <div class="sl">The Mental Model</div>
+  <div class="pipe-track">
+    <div class="pipe-stage ps-g" data-num="01 · SETUP"><span class="pipe-icon">📡</span><span class="pipe-name">API Call</span><span class="pipe-sub">POST /users</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-b" data-num="02 · EXTRACT"><span class="pipe-icon">🔑</span><span class="pipe-name">Token</span><span class="pipe-sub">Parse response</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-o" data-num="03 · INJECT"><span class="pipe-icon">🎭</span><span class="pipe-name">UI Test</span><span class="pipe-sub">Pre-built state</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-y" data-num="04 · TEARDOWN"><span class="pipe-icon">🗑️</span><span class="pipe-name">API Call</span><span class="pipe-sub">DELETE /users</span></div>
+  </div>
+
+  <div class="sl">Scope — 10 Days</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-stripe cs-orange"></div><div class="card-tag">Week 1 · Days 1–5</div><h3>Request Context</h3>
+      <div class="tr"><span class="tr-n">01</span><div><div class="tr-t">request fixture</div><div class="tr-s">Built-in · no axios needed</div></div></div>
+      <div class="tr"><span class="tr-n">02</span><div><div class="tr-t">GET/POST/PUT/DELETE</div><div class="tr-s">request.get() · request.post({data})</div></div></div>
+      <div class="tr"><span class="tr-n">03</span><div><div class="tr-t">Response parsing</div><div class="tr-s">await response.json() · .status() · .ok()</div></div></div>
+      <div class="tr"><span class="tr-n">04</span><div><div class="tr-t">Auth token extraction</div><div class="tr-s">Parse token · store in variable</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-green"></div><div class="card-tag">Week 2 · Days 6–10</div><h3>Chaining Patterns</h3>
+      <div class="tr"><span class="tr-n">05</span><div><div class="tr-t">beforeAll API setup</div><div class="tr-s">Create test data once · share via scope</div></div></div>
+      <div class="tr"><span class="tr-n">06</span><div><div class="tr-t">afterAll API teardown</div><div class="tr-s">DELETE resources · clean state</div></div></div>
+      <div class="tr"><span class="tr-n">07</span><div><div class="tr-t">route.fulfill()</div><div class="tr-s">Intercept network · fake response</div></div></div>
+      <div class="tr"><span class="tr-n">08</span><div><div class="tr-t">Custom API Fixture</div><div class="tr-s">Reusable wrapper · DRY principle</div></div></div>
+    </div>
+  </div>
+
+  <div class="sl">Interview Questions — Step 3</div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 07</span><span class="iq-q">"Why do you use API calls for test setup instead of navigating through the UI?"</span></div><div class="iq-b"><strong>Answer:</strong> UI-based setup is 10–30× slower, creates test interdependencies (if UI flow breaks, ALL tests fail), and adds unnecessary failure points. API setup is atomic — it either creates the resource or it doesn't. Also: API setup enables parallel test execution because each worker independently creates/destroys its own test data.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 08</span><span class="iq-q">"Walk me through how you chain an API login call to a UI test."</span></div><div class="iq-b"><strong>Answer:</strong> Three steps. (1) Use request.post('/api/login') in beforeAll to get a token. (2) Store the token. (3) Set it as a cookie via page.context().addCookies() or inject into localStorage via page.evaluate() so the UI test starts already authenticated. This technique is called session injection.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 09</span><span class="iq-q">"How would you test a 500 error without breaking your real backend?"</span></div><div class="iq-b"><strong>Answer:</strong> Use route.fulfill() to intercept the specific API call and return a fake 500 response. This lets you test error handling UI without needing the backend to actually fail. This is called network mocking or service virtualisation at enterprise scale.</div></div>
+
+  <div class="sl">Support Pivot</div>
+  <div class="pivot"><div class="pivot-head">💼 Step 3 Bullet</div><div class="pivot-cols"><div class="pc pc-b"><div class="pc-lbl lbl-b">❌ Before</div>"Tested REST APIs using Postman."</div><div class="p-arr">→</div><div class="pc pc-a"><div class="pc-lbl lbl-a">✅ After</div>"Implemented API chaining patterns using Playwright's request context — creating and tearing down test data via REST APIs in beforeAll/afterAll hooks, reducing test setup time by eliminating UI-based preconditions. Applied network mocking via route.fulfill() to simulate backend failure states without environment dependency."</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STEP 4
+══════════════════════════════════════════════ -->
+<div id="page-step4" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Step 04 of 05 · Complete ✓</div>
+    <div class="sh-title">GitHub Actions &amp; <span>CI/CD Pipeline</span></div>
+    <div class="sh-meta"><span class="sh-chip active-chip">✓ Complete</span><span class="sh-chip">10 Days</span><span class="sh-chip">Docker · 4 Shards · Slack</span></div>
+  </div>
+
+  <div class="sl">CI/CD Flow</div>
+  <div class="pipe-track">
+    <div class="pipe-stage ps-g" data-num="TRIGGER"><span class="pipe-icon">📤</span><span class="pipe-name">git push</span><span class="pipe-sub">PR / main</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-b" data-num="GITHUB ACTIONS"><span class="pipe-icon">⚙️</span><span class="pipe-name">Workflow</span><span class="pipe-sub">playwright.yml</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-o" data-num="DOCKER"><span class="pipe-icon">🐳</span><span class="pipe-name">Container</span><span class="pipe-sub">mcr.microsoft.com</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-y" data-num="PARALLEL"><span class="pipe-icon">⚡</span><span class="pipe-name">4 Workers</span><span class="pipe-sub">Sharded</span></div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-stage ps-r" data-num="NOTIFY"><span class="pipe-icon">🔔</span><span class="pipe-name">Slack Alert</span><span class="pipe-sub">On failure</span></div>
+  </div>
+
+  <div class="sl">Key Workflow Config</div>
+  <div class="cw"><div class="cb"><div class="cdots"><span class="rr"></span><span class="yy"></span><span class="gg"></span></div><span class="cf">.github/workflows/playwright.yml — Core Structure</span></div>
+  <pre><span class="ky">on</span>:
+  <span class="ky">push</span>: { <span class="ky">branches</span>: [ <span class="st">main</span> ] }
+  <span class="ky">schedule</span>: [{ <span class="ky">cron</span>: <span class="st">'0 6 * * 1-5'</span> }]   <span class="cm"># 6am IST Mon–Fri</span>
+
+<span class="ky">jobs</span>:
+  <span class="ky">test</span>:
+    <span class="ky">container</span>:
+      <span class="ky">image</span>: <span class="st">mcr.microsoft.com/playwright:v1.52.0-noble</span>
+    <span class="ky">strategy</span>:
+      <span class="ky">fail-fast</span>: <span class="dc">false</span>
+      <span class="ky">matrix</span>: { <span class="ky">shard</span>: [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>] }
+    <span class="ky">steps</span>:
+      - <span class="ky">run</span>: <span class="st">npx playwright test --shard=${{ matrix.shard }}/4</span>
+      - <span class="ky">uses</span>: <span class="st">actions/upload-artifact@v4</span>
+        <span class="ky">if</span>: <span class="st">always()</span></pre></div>
+
+  <div class="sl">Interview Questions — Step 4</div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 10</span><span class="iq-q">"Why run Playwright tests in a Docker container instead of directly on the runner machine?"</span></div><div class="iq-b"><strong>Answer:</strong> Three reasons. (1) Reproducibility — Docker guarantees identical browser versions, OS libraries, and Node versions on every run. (2) Isolation — each run starts from a clean state. (3) Microsoft's Playwright image ships with all browser dependencies pre-installed. Say: "This ensures CI failures are real test failures, not environment failures."</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 11</span><span class="iq-q">"How would you reduce a 20-minute test suite run to under 6 minutes?"</span></div><div class="iq-b"><strong>Answer:</strong> Playwright sharding via matrix strategy. Split into N shards running in parallel — --shard=1/4, --shard=2/4, etc. 4 shards = roughly 4× speed improvement. Key insight: this only works if tests are properly isolated — no shared state, no sequential dependencies. That's why teardown in Step 3 mattered.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 12</span><span class="iq-q">"A test passes locally but fails consistently on CI. Walk me through debugging this."</span></div><div class="iq-b"><strong>Answer:</strong> Systematic: (1) Headless vs headed difference — CI runs headless. (2) Missing environment variables or wrong baseURL. (3) Download trace artifact from failed run — open in trace viewer. (4) Browser version mismatch between local and Docker image. (5) Add --retries=1 to identify true flakiness. First tool: trace viewer, not console.log.</div></div>
+
+  <div class="sl">Slack Alert Preview</div>
+  <div class="slack-preview"><div class="slack-bar">🔔 #qa-alerts · Failure notification</div><div class="slack-body"><div class="slack-msg"><div class="slack-header">🔴 Playwright CI Failed</div><div class="slack-line">Repository: <span>your-org/qa-enterprise-test-factory</span></div><div class="slack-line">Branch: <span>main</span></div><div class="slack-line">Run URL: <span>https://github.com/…/actions/runs/123456</span></div></div></div></div>
+
+  <div class="sl">Support Pivot</div>
+  <div class="pivot"><div class="pivot-head">💼 Step 4 Bullet</div><div class="pivot-cols"><div class="pc pc-b"><div class="pc-lbl lbl-b">❌ Before</div>"Familiar with CI/CD concepts."</div><div class="p-arr">→</div><div class="pc pc-a"><div class="pc-lbl lbl-a">✅ After</div>"Designed and implemented a GitHub Actions CI pipeline using the official Microsoft Playwright Docker image — executing a parallelised test suite across 4 shards, publishing HTML reports as run artifacts, and delivering real-time Slack failure alerts. Pipeline triggers on push, PR, and daily schedule."</div></div></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STEP 5
+══════════════════════════════════════════════ -->
+<div id="page-step5" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Step 05 of 05 · Complete ✓</div>
+    <div class="sh-title">Visual Regression &amp; <span>Performance</span></div>
+    <div class="sh-meta"><span class="sh-chip active-chip">✓ Complete</span><span class="sh-chip">8 Days</span><span class="sh-chip">Snapshots · Lighthouse</span></div>
+  </div>
+
+  <div class="completion-banner">
+    <div class="cb-eyebrow">Framework Complete · All 5 Phases Built</div>
+    <div class="cb-title">Enterprise Test Factory — Done</div>
+    <div class="cb-sub">You have built every layer of a production-grade Playwright SDET framework. Most candidates claiming 4–5 YoE cannot show what you have on GitHub.</div>
+    <div class="cb-stats">
+      <div><span class="cb-stat-val">25+</span><div class="cb-stat-lbl">Tests Written</div></div>
+      <div><span class="cb-stat-val">5</span><div class="cb-stat-lbl">Framework Layers</div></div>
+      <div><span class="cb-stat-val">4</span><div class="cb-stat-lbl">CI Shards</div></div>
+      <div><span class="cb-stat-val">✓</span><div class="cb-stat-lbl">Green Badge</div></div>
+    </div>
+  </div>
+
+  <div class="sl">Scope — 8 Days</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-stripe cs-purple"></div><div class="card-tag">Days 1–4 · Visual</div><h3>Snapshot Testing</h3>
+      <div class="tr"><span class="tr-n">01</span><div><div class="tr-t">toHaveScreenshot()</div><div class="tr-s">First run = baseline · subsequent = diff</div></div></div>
+      <div class="tr"><span class="tr-n">02</span><div><div class="tr-t">Snapshot config</div><div class="tr-s">threshold · animations: 'disabled'</div></div></div>
+      <div class="tr"><span class="tr-n">03</span><div><div class="tr-t">Updating baselines</div><div class="tr-s">--update-snapshots · when to update vs fix</div></div></div>
+      <div class="tr"><span class="tr-n">04</span><div><div class="tr-t">CI snapshot storage</div><div class="tr-s">Commit baselines to Git · versioned</div></div></div>
+    </div>
+    <div class="card"><div class="card-stripe cs-green"></div><div class="card-tag">Days 5–8 · Performance</div><h3>Lighthouse Integration</h3>
+      <div class="tr"><span class="tr-n">05</span><div><div class="tr-t">playwright-lighthouse</div><div class="tr-s">npm install playwright-lighthouse</div></div></div>
+      <div class="tr"><span class="tr-n">06</span><div><div class="tr-t">Performance budgets</div><div class="tr-s">LCP &lt; 2.5s · CLS &lt; 0.1 · score &gt; 80</div></div></div>
+      <div class="tr"><span class="tr-n">07</span><div><div class="tr-t">Core Web Vitals</div><div class="tr-s">LCP / CLS / FID — what they mean</div></div></div>
+      <div class="tr"><span class="tr-n">08</span><div><div class="tr-t">Lighthouse on CI</div><div class="tr-s">Fail pipeline on budget breach</div></div></div>
+    </div>
+  </div>
+
+  <div class="sl">Interview Questions — Step 5</div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 13</span><span class="iq-q">"How does visual regression work and how do you handle intentional UI changes?"</span></div><div class="iq-b"><strong>Answer:</strong> First run creates a baseline PNG stored in the repo. Every subsequent run pixel-diffs the live screenshot against the baseline — diff above threshold fails the test. For intentional changes: run --update-snapshots, review the diff, commit new baseline. Key insight: "Snapshots are committed to Git so the baseline is versioned alongside the code that produced it."</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 14</span><span class="iq-q">"What are Core Web Vitals and why would a QA engineer care about them?"</span></div><div class="iq-b"><strong>Answer:</strong> LCP (Largest Contentful Paint — main content load speed, target &lt;2.5s), CLS (Cumulative Layout Shift — page stability, target &lt;0.1), FID/INP (interaction responsiveness, &lt;100ms). QA cares because: poor CWV impacts Google ranking (business concern), performance regression is a bug, asserting against a budget in CI catches regressions before production — shift-left principle.</div></div>
+  <div class="iq"><div class="iq-h"><span class="iq-num">Q 15</span><span class="iq-q">"Walk me through your entire test framework architecture end to end."</span></div><div class="iq-b"><strong>Answer (90 seconds, memorise this):</strong> "My framework has five layers: (1) JavaScript utility library for test data processing. (2) Page Object Model in TypeScript — locators private, actions public. (3) API chaining for setup and teardown — test data via POST before UI tests, deleted after. (4) GitHub Actions pipeline on Microsoft's Playwright Docker image, sharded across 4 workers, with Slack failure alerts. (5) Visual regression via Playwright snapshots and Lighthouse performance budget assertions on every push."</div></div>
+
+  <div class="sl">Pre-Interview Final Checklist</div>
+  <div class="final-card">
+    <h2>Before You Apply to a Single Job</h2>
+    <p>// every item must be true · no exceptions</p>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">GitHub repo is public with green Actions badge on README</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">README has: description, architecture, how to run, how CI works</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">30+ tests across all 5 phases</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">Resume has 5 support-pivot bullets rewritten in QA language</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">Can answer all 15 technical questions without notes</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">Q15 framework walkthrough rehearsed out loud — 90 seconds, no notes</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">LinkedIn updated: QA Automation Engineer · GitHub link · tech stack</span></div>
+    <div class="fci" onclick="this.classList.toggle('done');this.querySelector('.fchk').textContent=this.classList.contains('done')?'✓':''"><div class="fchk"></div><span class="fci-t">Applied to 10+ roles on Naukri, LinkedIn, company career pages</span></div>
+  </div>
+
+  <div class="sl">Support Pivot — Final Bullet</div>
+  <div class="pivot"><div class="pivot-head">💼 Step 5 Bullet</div><div class="pivot-cols"><div class="pc pc-b"><div class="pc-lbl lbl-b">❌ Before</div>"Experience with visual testing tools."</div><div class="p-arr">→</div><div class="pc pc-a"><div class="pc-lbl lbl-a">✅ After</div>"Extended the framework with visual regression testing using Playwright's native snapshot API — baselines versioned in Git, pixel-diff threshold configured, running on CI with failure diffs as artifacts. Integrated playwright-lighthouse for automated Core Web Vitals assertions against a defined performance budget on every pipeline run."</div></div></div>
+</div>
+
+<!-- interview page is in separate file, linked from nav -->
+<div id="page-interview" class="page-section">
+  <div class="section-header">
+    <div class="sh-eyebrow">Interview Question Bank · Top 5% Preparation</div>
+    <div class="sh-title">Loading <span>Question Bank</span>...</div>
+  </div>
+  <div class="mn"><div class="mn-ava">📋</div><div>The full interview question bank is in the separate <strong>interview-questions.html</strong> file — open it alongside this dashboard. It contains 50+ questions with dropdown answers across all topics.</div></div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function showPage(id, navEl) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) {
+    navEl.classList.add('active');
+  } else {
+    // find nav item by onclick
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+  window.scrollTo(0, 0);
+}
+
+// Checklist toggles
+document.querySelectorAll('.ci').forEach(el => {
+  el.addEventListener('click', () => {
+    el.classList.toggle('done');
+    el.querySelector('.chk').textContent = el.classList.contains('done') ? '✓' : '';
+  });
+});
+</script>
+</body>
+</html>
